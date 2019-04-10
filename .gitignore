@@ -1,0 +1,4 @@
+target/
+.idea/
+Skooblock.iml
+dependency-reduced-pom.xml
