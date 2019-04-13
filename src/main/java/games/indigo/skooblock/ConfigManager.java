@@ -56,16 +56,19 @@ public class ConfigManager {
     }
 
     public FileConfiguration getCustomConfig() { return config; }
+    public File getCustomConfigFile() { return configFile; }
     public FileConfiguration getIslandsConfig() { return islandsConfig; }
+    public File getIslandsFile() { return islandsFile; }
     public FileConfiguration getUserIslandsConfig() { return userIslandsConfig; }
 
     public void reloadConfigs() {
         try {
             getCustomConfig().load(configFile);
+            main.getIslandGenerator().getValues();
+
             getIslandsConfig().load(islandsFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
-
 }

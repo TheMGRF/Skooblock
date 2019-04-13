@@ -1,4 +1,6 @@
-x: 0
-y: 0
+x: 440
+z: 0
 maxX: 5000
+islandSize: 100
+buffer: 10
 world: skyblock

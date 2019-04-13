@@ -74,6 +74,14 @@
             <version>1.16.6</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>..</groupId>
+            <artifactId>..</artifactId>
+            <version>..</version>
+            <scope>system</scope>
+            <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/DarksCorner/DarksCooldownAPI.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>

@@ -3,6 +3,7 @@ package games.indigo.skooblock.listeners;
 import games.indigo.skooblock.Main;
 import games.indigo.skooblock.Utils;
 import games.indigo.skooblock.island.Island;
+import net.darkscorner.darkscooldown.Cooldown;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,8 +36,8 @@ public class InventoryClickListener implements Listener {
                 if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
                     for (Island island : main.getIslandTypes()) {
                         if (utils.format(island.getFriendlyName()).equals(item.getItemMeta().getDisplayName())) {
-                            // TODO: IslandType.valueOf(island.getIdentifier().toUpperCase()).getValue()
                             main.getIslandGenerator().generateNewIsland(player, island.getIslandType().getValue());
+                            new Cooldown(player, "islandGen", 120);
                             break;
                         }
                     }

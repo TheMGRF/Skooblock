@@ -1,0 +1,49 @@
+islands:
+  classic:
+    icon: GRASS_BLOCK
+    friendlyName: '&a&lClassic Island'
+    description: 'For the OG players! The classic Skyblock experience'
+  desert:
+    icon: SAND
+    friendlyName: '&e&lDesert Island'
+    description: 'For the OG players! The classic Skyblock experience'
+  indigo:
+    icon: PURPLE_WOOL
+    friendlyName: '&5&lIndigo Island'
+    description: 'For those hardcore fan boys'
+  snow:
+    icon: SNOW_BLOCK
+    friendlyName: '&f&lSnow Island'
+    description: 'For the king in the north'
+    costType: '&2$&a'
+    cost: 1
+  hell:
+    icon: NETHERRACK
+    friendlyName: '&4&lHell Island'
+    description: 'For those seeking a real tan'
+    costType: '&2$&a'
+    cost: 1
+  end:
+    icon: END_STONE
+    friendlyName: '&d&lEnd Island'
+    description: 'THIS IS THE END'
+    costType: '&2$&a'
+    cost: 1
+  mushroom:
+    icon: MYCELIUM
+    friendlyName: '&c&lMushroom Island'
+    description: 'Theres not &omooshroom &7here'
+    costType: '&3❖&b'
+    cost: 1
+  slime:
+    icon: SLIME_BLOCK
+    friendlyName: '&a&lSlime Island'
+    description: 'A sticky situation'
+    costType: '&3❖&b'
+    cost: 1
+  ore:
+    icon: DIAMOND_ORE
+    friendlyName: '&b&lOre Island'
+    description: 'Its an oreful place'
+    costType: '&3❖&b'
+    cost: 1
