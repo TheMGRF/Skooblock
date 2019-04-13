@@ -13,7 +13,7 @@ public class MainMenu {
     Main main = Main.getInstance();
 
     public void open(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 45, main.getUtils().format("&6Island Menu"));
+        Inventory inv = Bukkit.createInventory(null, 45, main.getUtils().format("&6&lIsland Menu"));
 
         inv.setItem(4, main.getUtils().buildItem(Material.RED_BED, 1, "&c&lIsland Home", Arrays.asList("", "&e&l(!) &7Teleport to your island home!")));
 

@@ -1,7 +1,9 @@
 package games.indigo.skooblock;
 
+import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -29,6 +31,10 @@ public class Utils {
             msgs.set(x, format(msgs.get(x)));
         }
         return msgs;
+    }
+
+    public boolean hasLinkedDiscord(Player player) {
+        return DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(player.getUniqueId()) != null;
     }
 
 }

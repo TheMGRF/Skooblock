@@ -22,6 +22,7 @@ public class IslandCmd implements CommandExecutor {
                     help(player);
                 } else if (args[0].equalsIgnoreCase("create")) {
                     // TODO: create
+                    main.getInstance().getIslandTypeSelector().open(player);
                 } else if (args[0].equalsIgnoreCase("setbiome")) {
                     // TODO: setbiome
                 } else if (args[0].equalsIgnoreCase("level")) {

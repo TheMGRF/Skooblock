@@ -20,6 +20,22 @@
             <id>fawe-repo</id>
             <url>https://ci.athion.net/job/FastAsyncWorldEdit-1.13/ws/mvn</url>
         </repository>
+
+        <repository>
+            <id>sk89q-snapshots</id>
+            <url>http://maven.sk89q.com/artifactory/repo</url>
+            <releases>
+                <enabled>true</enabled> <!-- releases enabled: this specific repository also hosts release versions -->
+            </releases>
+            <snapshots>
+                <enabled>true</enabled> <!-- snapshots enabled: we declare a SNAPSHOT repository because we need to download a SNAPSHOT dependency -->
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>Scarsz-Nexus</id>
+            <url>https://nexus.scarsz.me/content/groups/public/</url>
+        </repository>
     </repositories>
     <dependencies>
         <!--Spigot API-->
@@ -44,6 +60,19 @@
             <groupId>com.boydti</groupId>
             <artifactId>fawe-api</artifactId>
             <version>latest</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.discordsrv</groupId>
+            <artifactId>discordsrv</artifactId>
+            <version>1.16.6</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
