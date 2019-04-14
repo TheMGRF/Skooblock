@@ -5,9 +5,10 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.Transform;
-import games.indigo.skooblock.ConfigManager;
+import games.indigo.skooblock.SkooBlock;
+import games.indigo.skooblock.utils.ConfigManager;
 import games.indigo.skooblock.Main;
-import games.indigo.skooblock.WorldBorderManager;
+import games.indigo.skooblock.utils.WorldBorderManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -19,7 +20,7 @@ import java.util.Arrays;
 
 public class IslandGenerator {
 
-    private int x, z, maxX, islandSize, buffer;
+    private int x, z, maxX, islandSize, buffer, islandsBeingCreated;
     private String world;
 
     private Main main = Main.getInstance();
@@ -51,10 +52,19 @@ public class IslandGenerator {
     }
 
     public void generateNewIsland(Player player, String islandType) {
-        final Location loc = new Location(Bukkit.getWorld(world), x, 64, z);
+        incrementIslandsBeingCreated();
+
+        Location loc = new Location(Bukkit.getWorld(world), x, 64, z);
+
+        if (SkooBlock.playerHasIsland(player)) {
+            UserIsland userIsland = SkooBlock.getPlayerIsland(player);
+            Location centre = main.getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
+            loc = new Location(Bukkit.getWorld(world), centre.getX(), centre.getY(), centre.getZ());
+        }
+
         loadSchematic(islandType, loc);
 
-        player.teleport(loc);
+        player.teleport(loc.add(0.5, 0, 0.5));
         player.sendMessage(main.getUtils().format("&6&l(!) &eEnjoy your new island!"));
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 
@@ -77,8 +87,8 @@ public class IslandGenerator {
         // TODO: All locations are the same
 
         Location centre = loc;
-        Location lowerBounds = new Location(loc.getWorld(), (loc.getX() - (islandSize / 2) / 2), 0, (loc.getZ()  - (islandSize / 2) / 2));
-        Location upperBounds = new Location(loc.getWorld(), (loc.getX() + (islandSize / 2) / 2), 255, (loc.getZ()  + (islandSize / 2) / 2));
+        Location lowerBounds = new Location(loc.getWorld(), (loc.getX() - (islandSize / 2) / 2), 0, (loc.getZ() - (islandSize / 2) / 2));
+        Location upperBounds = new Location(loc.getWorld(), (loc.getX() + (islandSize / 2) / 2), 255, (loc.getZ() + (islandSize / 2) / 2));
         Location home = loc;
         Location warp = loc;
 
@@ -94,7 +104,7 @@ public class IslandGenerator {
                 islandSize,
                 0
         );
-
+        userIsland.generateConfig(userIsland);
     }
 
     private void loadSchematic(String name, Location loc) {
@@ -107,18 +117,23 @@ public class IslandGenerator {
         }
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public double getZ() {
+    public int getZ() {
         return z;
     }
 
-    public double getMaxX() {
+    public int getMaxX() {
         return maxX;
     }
 
+    public String getWorld() { return world; }
+
+    public int getIslandSize() { return islandSize; }
+
+    public int getBuffer() { return buffer; }
 
     public void setX(int x) {
         this.x = x;
@@ -131,4 +146,8 @@ public class IslandGenerator {
     public void setMaxX(int maxX) {
         this.maxX = maxX;
     }
+
+    public int getIslandsBeingCreated() { return islandsBeingCreated; }
+    public void incrementIslandsBeingCreated() { islandsBeingCreated++; }
+    public void setIslandsBeingCreated(int islandsBeingCreated) { this.islandsBeingCreated = islandsBeingCreated; }
 }

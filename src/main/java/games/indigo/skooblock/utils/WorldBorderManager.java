@@ -1,4 +1,4 @@
-package games.indigo.skooblock;
+package games.indigo.skooblock.utils;
 
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.PacketPlayOutWorldBorder;
