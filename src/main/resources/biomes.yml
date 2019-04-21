@@ -1,0 +1,37 @@
+biomes:
+  plains:
+    icon: GRASS_BLOCK
+    friendlyName: '&a&lPlains'
+    description: ''
+  desert:
+    icon: SAND
+    friendlyName: '&e&lDesert'
+    description: ''
+  taiga:
+    icon: SNOW
+    friendlyName: '&f&lTaiga'
+    description: ''
+  forest:
+    icon: OAK_SAPLING
+    friendlyName: '&2&lForest'
+    description: ''
+  jungle:
+    icon: JUNGLE_LEAVES
+    friendlyName: '&2&lJungle'
+    description: ''
+  swamp:
+    icon: LILY_PAD
+    friendlyName: '&2&lSwamp'
+    description: ''
+  mesa:
+    icon: TERRACOTTA
+    friendlyName: '&6&lMesa'
+    description: ''
+  savana:
+    icon: RED_SAND
+    friendlyName: '&c&lSavana'
+    description: ''
+  mushroom_fields:
+    icon: MYCELIUM
+    friendlyName: '&7&lMushroom Fields'
+    description: ''

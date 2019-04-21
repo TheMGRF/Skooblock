@@ -19,18 +19,19 @@ public class IslandTypeSelector {
 
         int loop = 0;
         for (Island island : main.getIslandTypes()) {
-            inv.setItem(loop, setItem(island.getIcon(), 1, island.getFriendlyName(), island.getDescription(), island.getCostIdentifier(), island.getCost(), island.getIdentifier()));
+            inv.setItem(loop, setItem(island.getIcon(), 1, island.getFriendlyName(), island.getDescription(), island.getCostIdentifier(), island.getCost()));
             loop++;
         }
 
+        main.getSoundsManager().click(player);
         player.openInventory(inv);
     }
 
-    private ItemStack setItem(Material material, int amount, String name, String desc, String costType, int cost, String type) {
+    private ItemStack setItem(Material material, int amount, String name, String desc, String costType, int cost) {
         if (costType.equals("") && cost == 0) {
-            return main.getUtils().buildItem(material, amount, name, Arrays.asList("", " &e&lDESCRIPTION", "  &7" + desc + "!", "", " &e&lCOST", "  &a&lFREE", "", "&e&l(!) &7Click to start off with the " + type + " island!"));
+            return main.getUtils().buildItem(material, amount, name, Arrays.asList("", " &e&lDESCRIPTION", "  &7" + desc + "!", "", " &e&lCOST", "  &a&lFREE", "", "&e&l(!) &7Click to start off with the " + name + " &7island!"));
         } else {
-            return main.getUtils().buildItem(material, amount, name, Arrays.asList("", " &e&lDESCRIPTION", "  &7" + desc + "!", "", " &e&lCOST", "  " + costType + cost, "", "&e&l(!) &7Click to start off with the " + type + " island!"));
+            return main.getUtils().buildItem(material, amount, name, Arrays.asList("", " &e&lDESCRIPTION", "  &7" + desc + "!", "", " &e&lCOST", "  " + costType + cost, "", "&e&l(!) &7Click to start off with the " + name + " &7island!"));
         }
     }
 

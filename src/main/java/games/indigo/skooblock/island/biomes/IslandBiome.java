@@ -1,11 +1,9 @@
-package games.indigo.skooblock.biomes;
+package games.indigo.skooblock.island.biomes;
 
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 
 public class IslandBiome {
-
-    // TODO: Look at abstract config readable
 
     private String identifier;
     private Material icon;
@@ -80,6 +78,5 @@ public class IslandBiome {
         return cost;
     }
 
-    public Biome getBiome() { return Biome.valueOf(getIdentifier()); }
-
+    public Biome getBiome() { return Biome.valueOf(getIdentifier().toUpperCase()); }
 }

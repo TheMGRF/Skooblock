@@ -1,7 +1,6 @@
 package games.indigo.skooblock.commands;
 
 import games.indigo.skooblock.Main;
-import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.utils.Utils;
 import net.darkscorner.darkscooldown.Cooldown;
 import org.bukkit.command.Command;
@@ -26,7 +25,7 @@ public class IslandCmd implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help")) {
                     help(player);
                 } else if (args[0].equalsIgnoreCase("create")) {
-                    if (!SkooBlock.playerHasIsland(player)) {
+                    if (!main.getIslandManager().playerHasIsland(player)) {
                         Cooldown cooldown = Cooldown.getCooldown(player, "islandGen");
                         if (cooldown == null || cooldown.isExpired()) {
                             main.getInstance().getIslandTypeSelector().open(player);
@@ -37,14 +36,14 @@ public class IslandCmd implements CommandExecutor {
                         player.sendMessage(utils.format("&4&l(!) &cYou already have an island! To reset use &7/" + cmd.getLabel() + " reset&c!"));
                     }
                 } else if (args[0].equalsIgnoreCase("home") || args[0].equalsIgnoreCase("go") || args[0].equalsIgnoreCase("tp")) {
-                    if (SkooBlock.isIslandResetting(player)) {
+                    if (main.getIslandManager().isIslandResetting(player)) {
                         player.sendMessage(utils.format("&4&l(!) &cYour island is still resetting!"));
                     } else {
-                        player.teleport(Main.getInstance().getUtils().getLocationAsBukkitLocation(SkooBlock.getPlayerIsland(player).getHome()).add(0.5, 0, 0.5));
+                        player.teleport(Main.getInstance().getUtils().getLocationAsBukkitLocation(main.getIslandManager().getPlayerIsland(player).getHome()).add(0.5, 0, 0.5));
                         player.sendMessage(utils.format("&6&l(!) &eTeleported to your island!"));
                     }
                 } else if (args[0].equalsIgnoreCase("reset")) {
-                    if (SkooBlock.playerHasIsland(player)) {
+                    if (main.getIslandManager().playerHasIsland(player)) {
                         Cooldown cooldown = Cooldown.getCooldown(player, "islandGen");
                         if (cooldown == null || cooldown.isExpired()) {
                             player.setMetadata("resettingIsland", new FixedMetadataValue(Main.getInstance(), true));
@@ -52,23 +51,50 @@ public class IslandCmd implements CommandExecutor {
                         } else {
                             player.sendMessage(utils.format("&4&l(!) &cYou cannot make another island yet! &e" + cooldown.getFormattedTimeLeft() + " &cremaining!"));
                         }
+                    } else {
+                        player.sendMessage(utils.format("&4&l(!) &cYou do not have an island! Use &7/is create &cto create one!"));
                     }
-                } else if (args[0].equalsIgnoreCase("setbiome")) {
-                    // TODO: setbiome
+                } else if (args[0].equalsIgnoreCase("biome")) {
+                    if (main.getIslandManager().playerHasIsland(player)) {
+                        Cooldown cooldown = Cooldown.getCooldown(player, "islandBiome");
+                        if (cooldown == null || cooldown.isExpired()) {
+                            player.setMetadata("islandBiome", new FixedMetadataValue(Main.getInstance(), true));
+                            main.getInstance().getBiomeSelector().open(player);
+                        } else {
+                            player.sendMessage(utils.format("&4&l(!) &cYou cannot change your biome again yet! &e" + cooldown.getFormattedTimeLeft() + " &cremaining!"));
+                        }
+                    } else {
+                        player.sendMessage(utils.format("&4&l(!) &cYou do not have an island! Use &7/is create &cto create one!"));
+                    }
                 } else if (args[0].equalsIgnoreCase("level")) {
                     // TODO: level
+                    player.sendMessage("level");
+                } else if (args[0].equalsIgnoreCase("setwarp")) {
+                    if (main.getIslandManager().isPlayerOnHomeIsland(player)) {
+                        main.getWarpsManager().setWarp(player);
+                        main.getSoundsManager().success(player);
+                    } else {
+                        player.sendMessage(utils.format("&4&l(!) &cYou have to be on your island to set a warp!"));
+                        main.getSoundsManager().error(player);
+                    }
                 } else if (args[0].equalsIgnoreCase("warps")) {
                     // TODO: warps
+                    main.getWarpMenu().open(player, 0);
                 } else if (args[0].equalsIgnoreCase("settings")) {
                     // TODO: settings
+                    player.sendMessage("settings");
                 } else if (args[0].equalsIgnoreCase("members")) {
                     // TODO: members
+                    main.getIslandMembersMenu().open(player);
                 } else if (args[0].equalsIgnoreCase("challenges")) {
                     // TODO: challenges
+                    player.sendMessage("challenges");
                 } else if (args[0].equalsIgnoreCase("top")) {
                     // TODO: top
+                    player.sendMessage("top");
                 } else {
                     // TODO: Unknown argument
+                    player.sendMessage("unknown argument");
                 }
             }
         }

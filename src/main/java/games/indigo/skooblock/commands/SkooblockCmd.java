@@ -21,9 +21,7 @@ public class SkooblockCmd implements CommandExecutor {
                     if (args[0].equalsIgnoreCase("help")) {
                         player.sendMessage("admin help menu");
                     } else if (args[0].equalsIgnoreCase("reload")) {
-                        main.getConfigManager().reloadConfigs();
-                        main.loadIslands();
-
+                        main.reload();
                         player.sendMessage(main.getUtils().format("&2&l(!) &aReloaded all configuration files!"));
                     }
                 }

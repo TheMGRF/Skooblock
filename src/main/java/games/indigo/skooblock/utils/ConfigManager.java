@@ -1,6 +1,7 @@
 package games.indigo.skooblock.utils;
 
 import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,16 +9,18 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigManager {
 
     private Main main = Main.getInstance();
 
-    public File configFile, islandsFile;
-    public FileConfiguration config, islandsConfig;
+    public File configFile, islandsFile, biomeFile;
+    public FileConfiguration config, islandsConfig, biomeConfig;
 
     public void loadFiles() {
+        // Custom Config
         configFile = new File(main.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
@@ -31,6 +34,7 @@ public class ConfigManager {
             e.printStackTrace();
         }
 
+        // Islands Config
         islandsFile = new File(main.getDataFolder(), "islands.yml");
         if (!islandsFile.exists()) {
             islandsFile.getParentFile().mkdirs();
@@ -43,19 +47,39 @@ public class ConfigManager {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+
+        // Biome Config
+        biomeFile = new File(main.getDataFolder(), "biomes.yml");
+        if (!biomeFile.exists()) {
+            biomeFile.getParentFile().mkdirs();
+            main.saveResource("biomes.yml", false);
+        }
+
+        biomeConfig = new YamlConfiguration();
+        try {
+            biomeConfig.load(biomeFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     public FileConfiguration getCustomConfig() { return config; }
     public File getCustomConfigFile() { return configFile; }
+
     public FileConfiguration getIslandsConfig() { return islandsConfig; }
     public File getIslandsFile() { return islandsFile; }
 
+    public File getBiomeFile() { return biomeFile; }
+    public FileConfiguration getBiomeConfig() { return biomeConfig; }
+
     public void reloadConfigs() {
         try {
-            getCustomConfig().load(configFile);
-            main.getIslandGenerator().getValues();
+            getCustomConfig().load(getCustomConfigFile());
 
-            getIslandsConfig().load(islandsFile);
+            main.getIslandGenerator().getValues();
+            getIslandsConfig().load(getIslandsFile());
+
+            getBiomeConfig().load(getBiomeFile());
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
@@ -110,5 +134,24 @@ public class ConfigManager {
         }
 
         return localConfig;
+    }
+
+    public File getUserFile(Player player) { return new File(main.getDataFolder() + "/user-islands/", player.getUniqueId().toString() + ".yml"); }
+
+    public List<FileConfiguration> getAllUserConfigs() {
+
+        main.getDataFolder().listFiles();
+        List<FileConfiguration> configs = new ArrayList<>();
+        for (File file : new File(main.getDataFolder() + "/user-islands").listFiles()) {
+            FileConfiguration config = new YamlConfiguration();
+            try {
+                config.load(file);
+                configs.add(config);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return configs;
     }
 }

@@ -6,11 +6,11 @@ islands:
   desert:
     icon: SAND
     friendlyName: '&e&lDesert Island'
-    description: 'For the OG players! The classic Skyblock experience'
+    description: 'Its coarse and rough and it gets everywhere'
   indigo:
     icon: PURPLE_WOOL
     friendlyName: '&5&lIndigo Island'
-    description: 'For those hardcore fan boys'
+    description: 'The new Indigo Skyblock experience'
   snow:
     icon: SNOW_BLOCK
     friendlyName: '&f&lSnow Island'

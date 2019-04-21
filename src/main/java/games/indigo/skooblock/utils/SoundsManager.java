@@ -9,7 +9,7 @@ public class SoundsManager {
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
     }
 
-    public void fail(Player player) {
+    public void error(Player player) {
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
     }
 

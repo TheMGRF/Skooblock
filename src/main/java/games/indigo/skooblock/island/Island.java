@@ -1,6 +1,9 @@
 package games.indigo.skooblock.island;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class Island {
 

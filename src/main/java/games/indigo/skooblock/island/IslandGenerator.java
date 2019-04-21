@@ -5,10 +5,8 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.Transform;
-import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.utils.ConfigManager;
 import games.indigo.skooblock.Main;
-import games.indigo.skooblock.utils.WorldBorderManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -56,8 +54,8 @@ public class IslandGenerator {
 
         Location loc = new Location(Bukkit.getWorld(world), x, 64, z);
 
-        if (SkooBlock.playerHasIsland(player)) {
-            UserIsland userIsland = SkooBlock.getPlayerIsland(player);
+        if (main.getIslandManager().playerHasIsland(player)) {
+            UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
             Location centre = main.getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
             loc = new Location(Bukkit.getWorld(world), centre.getX(), centre.getY(), centre.getZ());
         }
@@ -69,7 +67,7 @@ public class IslandGenerator {
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 
         // TODO: Need to load the world border each time a player enters their island (custom event)
-        new WorldBorderManager().sendBorder(player, loc.getX(), loc.getZ(), islandSize / 2);
+        main.getWorldBorderManager().applyBorder(player);
 
         //int islandSize = 100 | 1000
         //int buffer = 10 | 100
@@ -83,14 +81,10 @@ public class IslandGenerator {
 
         saveValues();
 
-        // TODO: Save island centre pos, max upper and lower bounds, initial bounds (for expansion + border),
-        // TODO: All locations are the same
-
         Location centre = loc;
         Location lowerBounds = new Location(loc.getWorld(), (loc.getX() - (islandSize / 2) / 2), 0, (loc.getZ() - (islandSize / 2) / 2));
         Location upperBounds = new Location(loc.getWorld(), (loc.getX() + (islandSize / 2) / 2), 255, (loc.getZ() + (islandSize / 2) / 2));
         Location home = loc;
-        Location warp = loc;
 
         UserIsland userIsland = new UserIsland(player.getUniqueId().toString(),
                 Arrays.asList(""),
@@ -99,7 +93,8 @@ public class IslandGenerator {
                 (int) upperBounds.getX() + "," + (int) upperBounds.getY() + "," + (int) upperBounds.getZ(),
                 "PLAINS",
                 (int) home.getX() + "," + (int) home.getY() + "," + (int) home.getZ(),
-                (int) warp.getX() + "," + (int) warp.getY() + "," + (int) warp.getZ(),
+                "0,0,0",
+                "",
                 Arrays.asList(true, false, false, false, true),
                 islandSize,
                 0

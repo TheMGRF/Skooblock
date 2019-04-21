@@ -4,14 +4,16 @@ import games.indigo.skooblock.Main;
 import games.indigo.skooblock.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
+import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserIsland {
 
-    private String owner, biome;
+    private String owner, biome, centre, lowerBound, upperBound, home, warp, description;
     private List<String> members;
-    private String centre, lowerBound, upperBound, home, warp;
     private List<Boolean> settings;
     private int size, level;
 
@@ -25,6 +27,7 @@ public class UserIsland {
      * @param biome The islands current biome
      * @param home The home location of the island
      * @param warp The warp location of the island
+     * @param description The description of the island warp
      * @param settings The settings associated with the island
      * @param size The size of the island
      * @param level The current level of the island
@@ -37,6 +40,7 @@ public class UserIsland {
                       String biome,
                       String home,
                       String warp,
+                      String description,
                       List<Boolean> settings,
                       int size,
                       int level) {
@@ -48,6 +52,7 @@ public class UserIsland {
         this.biome = biome;
         this.home = home;
         this.warp = warp;
+        this.description = description;
         this.settings = settings;
         this.size = size;
         this.level = level;
@@ -126,6 +131,14 @@ public class UserIsland {
     }
 
     /**
+     * Get the description of the island warp
+     * @return The description of the island warp
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
      * Get the list of settings associated with an island
      * @return The list of settings associated with an island
      */
@@ -155,5 +168,20 @@ public class UserIsland {
         for (Location loc : utils.getBlocksInRegion(utils.getLocationAsBukkitLocation(getUpperBound()), utils.getLocationAsBukkitLocation(getLowerBound()))) {
             loc.getBlock().setBiome(biome);
         }
+    }
+
+    public Map<Player, Double> getPlayersOnIsland() {
+        Location loc = Main.getInstance().getUtils().getLocationAsBukkitLocation(centre);
+        int radius = Main.getInstance().getIslandGenerator().getIslandSize() / 2;
+
+        Map<Player, Double> back = new HashMap<>();
+        int frange = radius * radius;
+        loc.getWorld().getPlayers().forEach((p) -> {
+            double d = p.getLocation().distanceSquared(loc);
+            if (d <= frange) {
+                back.put(p, d);
+            }
+        });
+        return back;
     }
 }

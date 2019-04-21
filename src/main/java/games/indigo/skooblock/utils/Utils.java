@@ -2,16 +2,16 @@ package games.indigo.skooblock.utils;
 
 import games.indigo.skooblock.Main;
 import github.scarsz.discordsrv.DiscordSRV;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Utils {
 
@@ -30,6 +30,72 @@ public class Utils {
         itemMeta.setLore(formatArray(description));
 
         item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    /**
+     * Build an item stack
+     * @param material The material to use in the item stack
+     * @param amount How many items should be in the item stack
+     * @param name The display name of the item stack
+     * @return The finished item stack
+     */
+    public ItemStack buildItem(Material material, int amount, String name) {
+        ItemStack item = new ItemStack(material, amount);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(format(name));
+
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    /**
+     *
+     * @param item
+     * @param name
+     * @param description
+     * @return
+     */
+    public ItemStack buildItem(ItemStack item, String name, List<String> description) {
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(name);
+        itemMeta.setLore(formatArray(description));
+
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    /**
+     *
+     * @param item
+     * @param name
+     * @return
+     */
+    public ItemStack buildItem(ItemStack item, String name) {
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(name);
+
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public ItemStack buildWarpHead(UUID uuid, List<String> description) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(format("&a" + offlinePlayer.getName() + "'s Island"));
+
+        itemMeta.setLore(description);
+        item.setItemMeta(itemMeta);
+
+        SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
+        skullMeta.setOwningPlayer(offlinePlayer);
+        item.setItemMeta(skullMeta);
 
         return item;
     }
