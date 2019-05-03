@@ -1,7 +1,7 @@
 package games.indigo.skooblock.utils;
 
-import games.indigo.skooblock.Main;
 import games.indigo.skooblock.SkooBlock;
+import games.indigo.skooblock.island.members.IslandMember;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,17 +14,17 @@ import java.util.List;
 
 public class ConfigManager {
 
-    private Main main = Main.getInstance();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
 
     public File configFile, islandsFile, biomeFile;
     public FileConfiguration config, islandsConfig, biomeConfig;
 
     public void loadFiles() {
         // Custom Config
-        configFile = new File(main.getDataFolder(), "config.yml");
+        configFile = new File(skooBlock.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
-            main.saveResource("config.yml", false);
+            skooBlock.saveResource("config.yml", false);
         }
 
         config = new YamlConfiguration();
@@ -35,10 +35,10 @@ public class ConfigManager {
         }
 
         // Islands Config
-        islandsFile = new File(main.getDataFolder(), "islands.yml");
+        islandsFile = new File(skooBlock.getDataFolder(), "islands.yml");
         if (!islandsFile.exists()) {
             islandsFile.getParentFile().mkdirs();
-            main.saveResource("islands.yml", false);
+            skooBlock.saveResource("islands.yml", false);
         }
 
         islandsConfig = new YamlConfiguration();
@@ -49,10 +49,10 @@ public class ConfigManager {
         }
 
         // Biome Config
-        biomeFile = new File(main.getDataFolder(), "biomes.yml");
+        biomeFile = new File(skooBlock.getDataFolder(), "biomes.yml");
         if (!biomeFile.exists()) {
             biomeFile.getParentFile().mkdirs();
-            main.saveResource("biomes.yml", false);
+            skooBlock.saveResource("biomes.yml", false);
         }
 
         biomeConfig = new YamlConfiguration();
@@ -76,7 +76,7 @@ public class ConfigManager {
         try {
             getCustomConfig().load(getCustomConfigFile());
 
-            main.getIslandGenerator().getValues();
+            skooBlock.getIslandGenerator().getValues();
             getIslandsConfig().load(getIslandsFile());
 
             getBiomeConfig().load(getBiomeFile());
@@ -86,7 +86,6 @@ public class ConfigManager {
     }
 
     public void createUserConfig(String owner,
-                                 List<String> members,
                                  String centre,
                                  String lowerBound,
                                  String upperBound,
@@ -96,7 +95,7 @@ public class ConfigManager {
                                  List<Boolean> settings,
                                  int size,
                                  int level) {
-        File localFile = new File(main.getDataFolder() + "/user-islands/", owner + ".yml");
+        File localFile = new File(skooBlock.getDataFolder() + "/user-islands/", owner + ".yml");
         FileConfiguration localConfig = new YamlConfiguration();
         try {
             localConfig.save(localFile);
@@ -106,7 +105,6 @@ public class ConfigManager {
         }
 
         localConfig.set("owner", owner);
-        localConfig.set("members", members);
         localConfig.set("centre", centre);
         localConfig.set("lowerBound", lowerBound);
         localConfig.set("upperBound", upperBound);
@@ -124,8 +122,8 @@ public class ConfigManager {
         }
     }
 
-    public FileConfiguration getUserConfig(Player player) {
-        File localFile = new File(main.getDataFolder() + "/user-islands/", player.getUniqueId().toString() + ".yml");
+    public FileConfiguration getUserConfig(String uuid) {
+        File localFile = new File(skooBlock.getDataFolder() + "/user-islands/", uuid + ".yml");
         FileConfiguration localConfig = new YamlConfiguration();
         try {
             localConfig.load(localFile);
@@ -136,13 +134,13 @@ public class ConfigManager {
         return localConfig;
     }
 
-    public File getUserFile(Player player) { return new File(main.getDataFolder() + "/user-islands/", player.getUniqueId().toString() + ".yml"); }
+    public File getUserFile(String uuid) { return new File(skooBlock.getDataFolder() + "/user-islands/", uuid + ".yml"); }
 
     public List<FileConfiguration> getAllUserConfigs() {
 
-        main.getDataFolder().listFiles();
+        skooBlock.getDataFolder().listFiles();
         List<FileConfiguration> configs = new ArrayList<>();
-        for (File file : new File(main.getDataFolder() + "/user-islands").listFiles()) {
+        for (File file : new File(skooBlock.getDataFolder() + "/user-islands").listFiles()) {
             FileConfiguration config = new YamlConfiguration();
             try {
                 config.load(file);

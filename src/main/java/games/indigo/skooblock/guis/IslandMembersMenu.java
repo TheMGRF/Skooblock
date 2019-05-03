@@ -1,39 +1,52 @@
 package games.indigo.skooblock.guis;
 
-import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.UserIsland;
 import games.indigo.skooblock.island.members.IslandMember;
-import games.indigo.skooblock.island.members.IslandMemberRole;
 import games.indigo.skooblock.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class IslandMembersMenu {
 
-    Main main = Main.getInstance();
-    Utils utils = main.getUtils();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
 
     public void open(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 27, main.getUtils().format("&a &lIsland Members"));
+        UserIsland userIsland = null;
+        String uuid = player.getUniqueId().toString();
 
-        inv.setItem(4, utils.buildItem(getHead(player.getUniqueId().toString()), utils.format("&6&lTheMGRF")));
+        if (skooBlock.getIslandManager().playerHasIsland(uuid)) {
+            userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
+        } else if (skooBlock.getIslandManager().getMemberIsland(uuid) != null) {
+            userIsland = skooBlock.getIslandManager().getMemberIsland(player.getUniqueId().toString());
+        } else {
+            player.sendMessage(skooBlock.getUtils().format("&4&l(!) &cFailed to find your island! Please try again."));
+            skooBlock.getSoundsManager().error(player);
+            return;
+        }
 
-        UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
+        Inventory inv = Bukkit.createInventory(null, 27, skooBlock.getUtils().format("&a&lIsland Members"));
 
-        // TODO: This bs
-        // for (IslandMemberRole islandMemberRole : userIsland.getMembers()) {
-        //}
+        OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(userIsland.getOwner()));
+        inv.setItem(4, skooBlock.getUtils().buildItem(getHead(player.getUniqueId().toString()), "&6&l" + owner.getName() + "'s Island"));
 
-        //inv.setItem(9-17, filler);
-
-        // members
+        int loop = 9;
+        for (IslandMember islandMember : userIsland.getMembers()) {
+            String name = Bukkit.getOfflinePlayer(UUID.fromString(islandMember.getUuid())).getName();
+            String role = islandMember.getMemberRole().getName();
+            String balance = "1337";
+            inv.setItem(loop, skooBlock.getUtils().buildItem(getHead(player.getUniqueId().toString()), "&a" + name, Arrays.asList(""," &7Role: &e" + role, " &7Balance: &e$" + balance,"", "&e&l(!) &fLeft-Click &7to &apromote&7!", "&e&l(!) &fRight-Click &7to &cdemote&7!", "&e&l(!) &fMiddle-Click &7to &4kick&7!")));
+            loop++;
+        }
 
         player.openInventory(inv);
     }

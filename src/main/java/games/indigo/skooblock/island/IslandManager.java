@@ -8,7 +8,8 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
+import games.indigo.skooblock.island.members.IslandMember;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -20,26 +21,27 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class IslandManager {
 
     /**
      * Check to see if a player has an island
-     * @param player The player to check
+     * @param uuid The UUID of the player to check
      * @return <code>true</code> if player has an island; <code>false</code> if the player does not have an island
      */
-    public boolean playerHasIsland(Player player) {
-        return new File(Main.getInstance().getDataFolder() + "/user-islands/", player.getUniqueId().toString() + ".yml").exists();
+    public boolean playerHasIsland(String uuid) {
+        return new File(SkooBlock.getInstance().getDataFolder() + "/user-islands/", uuid + ".yml").exists();
     }
 
     /**
      * Get a players island
-     * @param player The player whos island to get
+     * @param uuid The UUID of the player whos island to get
      * @return A players island
      */
-    public UserIsland getPlayerIsland(Player player) {
-        if (playerHasIsland(player)) {
-            FileConfiguration config = Main.getInstance().getConfigManager().getUserConfig(player);
+    public UserIsland getPlayerIsland(String uuid) {
+        if (playerHasIsland(uuid)) {
+            FileConfiguration config = SkooBlock.getInstance().getConfigManager().getUserConfig(uuid);
 
             UserIsland userIsland = generateUserIslandFromConfig(config);
             return userIsland;
@@ -53,12 +55,12 @@ public class IslandManager {
      * @return <code>true</code> if the player is on their island; <code>false</code> if the player is not on their island
      */
     public boolean isPlayerOnHomeIsland(Player player) {
-        if (getPlayerIsland(player) != null) {
-            UserIsland userIsland = getPlayerIsland(player);
+        if (getPlayerIsland(player.getUniqueId().toString()) != null) {
+            UserIsland userIsland = getPlayerIsland(player.getUniqueId().toString());
 
             Location loc = player.getLocation();
-            Location lowerBound = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
-            Location upperBound = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
+            Location lowerBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
+            Location upperBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
 
             if (((loc.getX() > lowerBound.getX()) && (loc.getY() > lowerBound.getY()) && (loc.getZ() > lowerBound.getZ())) && ((loc.getX() < upperBound.getX()) && (loc.getY() < upperBound.getY()) && (loc.getZ() < upperBound.getZ()))) {
                 return true;
@@ -73,11 +75,12 @@ public class IslandManager {
      * @return The user island the player is on
      */
     public UserIsland getIslandPlayerIsOn(Player player) {
-
         // Online check
         for (Player loop : Bukkit.getOnlinePlayers()) {
-            if (getPlayerIsland(loop).getPlayersOnIsland().containsKey(player)) {
-                return getPlayerIsland(loop);
+            if (playerHasIsland(loop.getUniqueId().toString())) {
+                if (getPlayerIsland(loop.getUniqueId().toString()).getPlayersOnIsland().containsKey(player)) {
+                    return getPlayerIsland(loop.getUniqueId().toString());
+                }
             }
         }
 
@@ -85,11 +88,60 @@ public class IslandManager {
         Location loc = player.getLocation();
         for (UserIsland userIsland : getAllPlayerIslands()) {
 
-            Location lowerBound = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
-            Location upperBound = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
+            Location lowerBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
+            Location upperBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
 
             if (((loc.getX() > lowerBound.getX()) && (loc.getY() > lowerBound.getY()) && (loc.getZ() > lowerBound.getZ())) && ((loc.getX() < upperBound.getX()) && (loc.getY() < upperBound.getY()) && (loc.getZ() < upperBound.getZ()))) {
                 return userIsland;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a user island at a specific location
+     * @param loc The location to check
+     * @return The user island at the location
+     */
+    public UserIsland getUserIslandAtLocation(Location loc) {
+        // Online check
+        for (Player loop : Bukkit.getOnlinePlayers()) {
+            if (SkooBlock.getInstance().getIslandManager().playerHasIsland(loop.getUniqueId().toString())) {
+                UserIsland userIsland = getPlayerIsland(loop.getUniqueId().toString());
+                Location lowerBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
+                Location upperBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
+
+                if (((loc.getX() > lowerBound.getX()) && (loc.getY() > lowerBound.getY()) && (loc.getZ() > lowerBound.getZ())) && ((loc.getX() < upperBound.getX()) && (loc.getY() < upperBound.getY()) && (loc.getZ() < upperBound.getZ()))) {
+                    return userIsland;
+                }
+            }
+        }
+
+        // Config check
+        for (UserIsland userIsland : getAllPlayerIslands()) {
+            Location lowerBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
+            Location upperBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
+
+            if (((loc.getX() > lowerBound.getX()) && (loc.getY() > lowerBound.getY()) && (loc.getZ() > lowerBound.getZ())) && ((loc.getX() < upperBound.getX()) && (loc.getY() < upperBound.getY()) && (loc.getZ() < upperBound.getZ()))) {
+                return userIsland;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the island a player is a member of
+     * @param uuid The UUID of the player to check
+     * @return The user island the player is a member of
+     */
+    public UserIsland getMemberIsland(String uuid) {
+        for (UserIsland userIsland : getAllPlayerIslands()) {
+            for (IslandMember islandMember : userIsland.getMembers()) {
+                if (islandMember.getUuid().equals(uuid)) {
+                    return userIsland;
+                }
             }
         }
 
@@ -111,11 +163,11 @@ public class IslandManager {
      * @param player The player whos island should be reset
      */
     public void resetIsland(Player player) {
-        UserIsland userIsland = getPlayerIsland(player);
+        UserIsland userIsland = getPlayerIsland(player.getUniqueId().toString());
 
-        World world = new BukkitWorld(Bukkit.getWorld(Main.getInstance().getIslandGenerator().getWorld()));
-        Location lowerLoc = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
-        Location upperLoc = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
+        World world = new BukkitWorld(Bukkit.getWorld(SkooBlock.getInstance().getIslandGenerator().getWorld()));
+        Location lowerLoc = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
+        Location upperLoc = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
         BlockVector3 lowerVec = BlockVector3.at(lowerLoc.getX(), lowerLoc.getY(), lowerLoc.getZ());
         BlockVector3 upperVec = BlockVector3.at(upperLoc.getX(), upperLoc.getY(), upperLoc.getZ());
 
@@ -141,8 +193,18 @@ public class IslandManager {
      * @return The generated user island
      */
     public UserIsland generateUserIslandFromConfig(FileConfiguration fileConfiguration) {
+        List<String> members = new ArrayList<>();
+        if (fileConfiguration.isSet("members.")) {
+            // TODO: Bug here NPE
+
+            Map<String, Object> map = fileConfiguration.getConfigurationSection("members.").getValues(false);
+            for (String uuid : map.keySet()) {
+                members.add(uuid);
+            }
+        }
+
         return new UserIsland(fileConfiguration.getString("owner"),
-                fileConfiguration.getStringList("members"),
+                members,
                 fileConfiguration.getString("centre"),
                 fileConfiguration.getString("lowerBound"),
                 fileConfiguration.getString("upperBound"),
@@ -155,6 +217,16 @@ public class IslandManager {
                 fileConfiguration.getInt("level"));
     }
 
+    public UserIsland getUserIslandFromUUID(String uuid) {
+        for (UserIsland userIsland : getAllPlayerIslands()) {
+            if (userIsland.getOwner().equals(uuid)) {
+                return userIsland;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Get a list of all user islands
      * @return A list of all user islands
@@ -162,7 +234,7 @@ public class IslandManager {
     public List<UserIsland> getAllPlayerIslands() {
         List<UserIsland> userIslands = new ArrayList<>();
 
-        for (File file : new File(Main.getInstance().getDataFolder() + "/user-islands/").listFiles()) {
+        for (File file : new File(SkooBlock.getInstance().getDataFolder() + "/user-islands/").listFiles()) {
             FileConfiguration fileConfiguration = new YamlConfiguration();
             try {
                 fileConfiguration.load(file);

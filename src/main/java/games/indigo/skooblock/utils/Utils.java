@@ -1,6 +1,6 @@
 package games.indigo.skooblock.utils;
 
-import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
 import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -9,7 +9,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,7 +59,7 @@ public class Utils {
      */
     public ItemStack buildItem(ItemStack item, String name, List<String> description) {
         ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(name);
+        itemMeta.setDisplayName(format(name));
         itemMeta.setLore(formatArray(description));
 
         item.setItemMeta(itemMeta);
@@ -76,7 +75,7 @@ public class Utils {
      */
     public ItemStack buildItem(ItemStack item, String name) {
         ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(name);
+        itemMeta.setDisplayName(format(name));
 
         item.setItemMeta(itemMeta);
 
@@ -137,7 +136,7 @@ public class Utils {
      */
     public Location getLocationAsBukkitLocation(String stringLoc) {
         String[] locs = stringLoc.split(",");
-        return new Location(Bukkit.getWorld(Main.getInstance().getConfigManager().getCustomConfig().getString("world")), Integer.parseInt(locs[0]), Integer.parseInt(locs[1]), Integer.parseInt(locs[2]));
+        return new Location(Bukkit.getWorld(SkooBlock.getInstance().getConfigManager().getCustomConfig().getString("world")), Integer.parseInt(locs[0]), Integer.parseInt(locs[1]), Integer.parseInt(locs[2]));
     }
 
     public List<Location> getBlocksInRegion(Location loc1, Location loc2) {

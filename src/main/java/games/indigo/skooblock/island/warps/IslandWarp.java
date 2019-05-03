@@ -40,7 +40,7 @@ public class IslandWarp {
      * @return The location of the island warp
      */
     public Location getLocation() {
-        return location;
+        return location.add(0.5, 0, 0.5);
     }
 
     /**

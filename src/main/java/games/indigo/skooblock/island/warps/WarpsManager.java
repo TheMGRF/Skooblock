@@ -1,8 +1,9 @@
 package games.indigo.skooblock.island.warps;
 
-import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.UserIsland;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -11,14 +12,14 @@ import java.util.List;
 
 public class WarpsManager {
 
-    Main main = Main.getInstance();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
 
     public List<IslandWarp> getAllWarps() {
         List<IslandWarp> warps = new ArrayList<>();
 
-        for (UserIsland userIsland : main.getIslandManager().getAllPlayerIslands()) {
+        for (UserIsland userIsland : skooBlock.getIslandManager().getAllPlayerIslands()) {
             if (!userIsland.getWarp().equals("0,0,0")) {
-                Location loc = main.getUtils().getLocationAsBukkitLocation(userIsland.getWarp());
+                Location loc = skooBlock.getUtils().getLocationAsBukkitLocation(userIsland.getWarp());
                 warps.add(new IslandWarp(userIsland.getOwner(), userIsland.getDescription(), loc));
             }
         }
@@ -36,26 +37,30 @@ public class WarpsManager {
         return null;
     }
 
+    public IslandWarp getWarpByUUID(String uuid) {
+        for (IslandWarp islandWarp : getAllWarps()) {
+            if (islandWarp.getOwnerUuid().equals(uuid)) {
+                return islandWarp;
+            }
+        }
+        return null;
+    }
+
     public void setWarp(Player player) {
-        UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
+        UserIsland userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
+        String uuid = player.getUniqueId().toString();
 
         Location loc = player.getLocation();
-        main.getConfigManager().getUserConfig(player).set("warp", (int) loc.getX() + "," + (int) loc.getY() + "," + (int) loc.getZ());
+
+        FileConfiguration config = skooBlock.getConfigManager().getUserConfig(uuid);
+        config.set("warp", (int) loc.getX() + "," + (int) loc.getY() + "," + (int) loc.getZ());
         try {
-            if (main.getConfigManager().getUserFile(player) != null) {
-                main.getConfigManager().getUserConfig(player).save(main.getConfigManager().getUserFile(player));
-            }
+            config.save(skooBlock.getConfigManager().getUserFile(uuid));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        for (IslandWarp islandWarp : getAllWarps()) {
-            if (islandWarp.getOwnerUuid().equals(player.getUniqueId().toString())) {
-                islandWarp.setLocation(loc);
-            }
-        }
-
-        player.sendMessage(main.getUtils().format("&2&l(!) &aIsland warp location set to &f" + (int) loc.getX() + "," + (int) loc.getY() + "," + (int) loc.getZ() + "&a!"));
+        userIsland.setWarp((int) loc.getX() + "," + (int) loc.getY() + "," + (int) loc.getZ());
+        player.sendMessage(skooBlock.getUtils().format("&2&l(!) &aIsland warp location set to &f" + (int) loc.getX() + ", " + (int) loc.getY() + ", " + (int) loc.getZ() + "&a!"));
     }
-
 }

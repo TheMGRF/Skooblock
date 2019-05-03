@@ -1,14 +1,18 @@
 package games.indigo.skooblock.island;
 
-import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
+import games.indigo.skooblock.island.members.IslandMember;
+import games.indigo.skooblock.island.roles.IslandMemberDefaultRole;
+import games.indigo.skooblock.island.roles.IslandMemberRole;
 import games.indigo.skooblock.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 public class UserIsland {
 
@@ -63,7 +67,7 @@ public class UserIsland {
      * @param userIsland The users island to create a config for
      */
     public void generateConfig(UserIsland userIsland) {
-        Main.getInstance().getConfigManager().createUserConfig(userIsland.owner, userIsland.members, userIsland.centre, userIsland.lowerBound, userIsland.upperBound, userIsland.biome, userIsland.home, userIsland.warp, userIsland.settings, userIsland.size, userIsland.level);
+        SkooBlock.getInstance().getConfigManager().createUserConfig(userIsland.owner, userIsland.centre, userIsland.lowerBound, userIsland.upperBound, userIsland.biome, userIsland.home, userIsland.warp, userIsland.settings, userIsland.size, userIsland.level);
     }
 
     /**
@@ -78,8 +82,13 @@ public class UserIsland {
      * The the UUIDs of the members of an island
      * @return The UUIDs of the members of an island
      */
-    public List<String> getMembers() {
-        return members;
+    public List<IslandMember> getMembers() {
+        List<IslandMember> islandMembers = new ArrayList<>();
+        for (String member : members) {
+            islandMembers.add(new IslandMember(getOwner(), member));
+        }
+
+        return islandMembers;
     }
 
     /**
@@ -162,17 +171,53 @@ public class UserIsland {
         return level;
     }
 
+    public IslandMemberRole getMemberRole(String uuid) {
+        for (IslandMember islandMember : getMembers()) {
+            if (islandMember.getUuid().equals(uuid)) {
+                return islandMember.getMemberRole();
+            }
+        }
+        return new IslandMemberDefaultRole();
+    }
+
+    public void addMember(String uuid) {
+        FileConfiguration config = SkooBlock.getInstance().getConfigManager().getUserConfig(getOwner());
+        config.set("members." + uuid, "default");
+        try {
+            config.save(SkooBlock.getInstance().getConfigManager().getUserFile(getOwner()));
+            members.add(uuid);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeMember(String uuid) {
+        FileConfiguration config = SkooBlock.getInstance().getConfigManager().getUserConfig(getOwner());
+        config.set("members." + uuid, null);
+        try {
+            config.save(SkooBlock.getInstance().getConfigManager().getUserFile(getOwner()));
+            if (members.contains(uuid)) {
+                members.remove(uuid);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setWarp(String warp) {
+        this.warp = warp;
+    }
 
     public void setBiome(Biome biome) {
-        Utils utils = Main.getInstance().getUtils();
+        Utils utils = SkooBlock.getInstance().getUtils();
         for (Location loc : utils.getBlocksInRegion(utils.getLocationAsBukkitLocation(getUpperBound()), utils.getLocationAsBukkitLocation(getLowerBound()))) {
             loc.getBlock().setBiome(biome);
         }
     }
 
     public Map<Player, Double> getPlayersOnIsland() {
-        Location loc = Main.getInstance().getUtils().getLocationAsBukkitLocation(centre);
-        int radius = Main.getInstance().getIslandGenerator().getIslandSize() / 2;
+        Location loc = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(centre);
+        int radius = SkooBlock.getInstance().getIslandGenerator().getIslandSize() / 2;
 
         Map<Player, Double> back = new HashMap<>();
         int frange = radius * radius;

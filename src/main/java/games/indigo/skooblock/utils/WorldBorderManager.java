@@ -1,6 +1,6 @@
 package games.indigo.skooblock.utils;
 
-import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.UserIsland;
 import net.minecraft.server.v1_13_R2.EntityPlayer;
 import net.minecraft.server.v1_13_R2.PacketPlayOutWorldBorder;
@@ -12,25 +12,29 @@ import org.bukkit.entity.Player;
 
 public class WorldBorderManager {
 
-    private Main main = Main.getInstance();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
 
     public void applyBorder(Player player) {
-        if (main.getIslandManager().getIslandPlayerIsOn(player) != null) {
-            if (main.getIslandManager().isPlayerOnHomeIsland(player) || main.getIslandManager().isPlayerMember(player, main.getIslandManager().getIslandPlayerIsOn(player))) {
-                UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
-                Location centre = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
+        if (skooBlock.getIslandManager().getIslandPlayerIsOn(player) != null) {
+            if (skooBlock.getIslandManager().isPlayerOnHomeIsland(player) || skooBlock.getIslandManager().isPlayerMember(player, skooBlock.getIslandManager().getIslandPlayerIsOn(player))) {
+                UserIsland userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
+                Location centre = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
 
-                new WorldBorderManager().sendBorder(player, centre.getX(), centre.getZ(), Main.getInstance().getIslandGenerator().getIslandSize() / 2);
+                centre = centre.add(0.5, 0, 0.5);
+
+                sendBorder(player, centre.getX(), centre.getZ(), SkooBlock.getInstance().getIslandGenerator().getIslandSize() + 1);
                 return;
             } else {
-                if (main.getIslandManager().getIslandPlayerIsOn(player) == null) {
-                    new WorldBorderManager().sendBorder(player, 0, 0, Integer.MAX_VALUE);
+                if (skooBlock.getIslandManager().getIslandPlayerIsOn(player) == null) {
+                    sendBorder(player, 0, 0, 20001);
                     return;
                 } else {
-                    UserIsland userIsland = main.getIslandManager().getIslandPlayerIsOn(player);
-                    Location centre = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
+                    UserIsland userIsland = skooBlock.getIslandManager().getIslandPlayerIsOn(player);
+                    Location centre = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
 
-                    new WorldBorderManager().sendBorder(player, centre.getX(), centre.getZ(), Main.getInstance().getIslandGenerator().getIslandSize() / 2);
+                    centre = centre.add(0.5, 0, 0.5);
+
+                    sendBorder(player, centre.getX(), centre.getZ(), SkooBlock.getInstance().getIslandGenerator().getIslandSize() + 1);
                     return;
                 }
             }

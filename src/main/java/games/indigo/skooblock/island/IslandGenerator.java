@@ -5,8 +5,8 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.Transform;
+import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.utils.ConfigManager;
-import games.indigo.skooblock.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -21,8 +21,8 @@ public class IslandGenerator {
     private int x, z, maxX, islandSize, buffer, islandsBeingCreated;
     private String world;
 
-    private Main main = Main.getInstance();
-    ConfigManager configManager = main.getConfigManager();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
+    ConfigManager configManager = skooBlock.getConfigManager();
 
     public IslandGenerator() {
         getValues();
@@ -54,20 +54,20 @@ public class IslandGenerator {
 
         Location loc = new Location(Bukkit.getWorld(world), x, 64, z);
 
-        if (main.getIslandManager().playerHasIsland(player)) {
-            UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
-            Location centre = main.getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
+        if (skooBlock.getIslandManager().playerHasIsland(player.getUniqueId().toString())) {
+            UserIsland userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
+            Location centre = skooBlock.getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
             loc = new Location(Bukkit.getWorld(world), centre.getX(), centre.getY(), centre.getZ());
         }
 
         loadSchematic(islandType, loc);
 
         player.teleport(loc.add(0.5, 0, 0.5));
-        player.sendMessage(main.getUtils().format("&6&l(!) &eEnjoy your new island!"));
+        player.sendMessage(skooBlock.getUtils().format("&6&l(!) &eEnjoy your new island!"));
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 
         // TODO: Need to load the world border each time a player enters their island (custom event)
-        main.getWorldBorderManager().applyBorder(player);
+        skooBlock.getWorldBorderManager().applyBorder(player);
 
         //int islandSize = 100 | 1000
         //int buffer = 10 | 100
@@ -82,8 +82,8 @@ public class IslandGenerator {
         saveValues();
 
         Location centre = loc;
-        Location lowerBounds = new Location(loc.getWorld(), (loc.getX() - (islandSize / 2) / 2), 0, (loc.getZ() - (islandSize / 2) / 2));
-        Location upperBounds = new Location(loc.getWorld(), (loc.getX() + (islandSize / 2) / 2), 255, (loc.getZ() + (islandSize / 2) / 2));
+        Location lowerBounds = new Location(loc.getWorld(), (loc.getX() - (islandSize / 2) - 1), 0, (loc.getZ() - (islandSize / 2) - 1));
+        Location upperBounds = new Location(loc.getWorld(), (loc.getX() + (islandSize / 2) + 1), 255, (loc.getZ() + (islandSize / 2) + 1));
         Location home = loc;
 
         UserIsland userIsland = new UserIsland(player.getUniqueId().toString(),
@@ -103,7 +103,7 @@ public class IslandGenerator {
     }
 
     private void loadSchematic(String name, Location loc) {
-        File file = new File(main.getDataFolder() + "/schematics/", name + ".schem");
+        File file = new File(skooBlock.getDataFolder() + "/schematics/", name + ".schem");
 
         try {
             EditSession editSession = ClipboardFormats.findByFile(file).load(file).paste(new BukkitWorld(Bukkit.getWorld(world)), BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()), false, false, (Transform) null);

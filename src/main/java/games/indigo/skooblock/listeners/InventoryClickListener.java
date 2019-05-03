@@ -1,6 +1,5 @@
 package games.indigo.skooblock.listeners;
 
-import games.indigo.skooblock.Main;
 import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.biomes.IslandBiome;
 import games.indigo.skooblock.island.UserIsland;
@@ -19,8 +18,8 @@ import java.util.UUID;
 
 public class InventoryClickListener implements Listener {
 
-    Main main = Main.getInstance();
-    Utils utils = main.getUtils();
+    SkooBlock skooBlock = SkooBlock.getInstance();
+    Utils utils = skooBlock.getUtils();
 
     @EventHandler
     public void onInvClick(InventoryClickEvent e) {
@@ -33,7 +32,7 @@ public class InventoryClickListener implements Listener {
                 if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
                     Player player = (Player) e.getWhoClicked();
 
-                    // TODO: Adding clicking sounds -- main.getSoundsManager().click(player);
+                    // TODO: Adding clicking sounds -- skooBlock.getSoundsManager().click(player);
 
                     String itemName = item.getItemMeta().getDisplayName();
                     if (itemName.equals(utils.format("&c&lHome"))) {
@@ -66,38 +65,38 @@ public class InventoryClickListener implements Listener {
                 ItemStack item = e.getCurrentItem();
 
                 if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-                    for (Island island : main.getIslandTypes()) {
+                    for (Island island : skooBlock.getIslandTypes()) {
                         if (utils.format(island.getFriendlyName()).equals(item.getItemMeta().getDisplayName())) {
-                            if (main.getIslandGenerator().getIslandsBeingCreated() <= 5) {
-                                if (main.getIslandManager().isIslandResetting(player)) {
+                            if (skooBlock.getIslandGenerator().getIslandsBeingCreated() <= 5) {
+                                if (skooBlock.getIslandManager().isIslandResetting(player)) {
                                     player.teleport(SkooBlock.getSpawnLocation());
-                                    main.getSoundsManager().success(player);
-                                    main.getIslandManager().resetIsland(player);
+                                    skooBlock.getSoundsManager().success(player);
+                                    skooBlock.getIslandManager().resetIsland(player);
                                     player.sendMessage(utils.format("&6&l(!) &eResetting island..."));
-                                    Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
+                                    Bukkit.getScheduler().runTaskLater(SkooBlock.getInstance(), new Runnable() {
                                         @Override
                                         public void run() {
-                                            UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
+                                            UserIsland userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
                                             player.teleport(utils.getLocationAsBukkitLocation(userIsland.getCentre()));
 
-                                            main.getIslandGenerator().generateNewIsland(player, island.getIslandType().getValue());
+                                            skooBlock.getIslandGenerator().generateNewIsland(player, island.getIslandType().getValue());
                                             new Cooldown(player, "islandGen", 120);
 
                                             player.sendMessage(utils.format("&2&l(!) &aIsland reset!"));
-                                            player.removeMetadata("resettingIsland", Main.getInstance());
+                                            player.removeMetadata("resettingIsland", SkooBlock.getInstance());
                                         }
                                     }, 20 * 6);
                                     break;
                                 } else {
-                                    main.getSoundsManager().success(player);
-                                    main.getIslandGenerator().generateNewIsland(player, island.getIslandType().getValue());
+                                    skooBlock.getSoundsManager().success(player);
+                                    skooBlock.getIslandGenerator().generateNewIsland(player, island.getIslandType().getValue());
                                     new Cooldown(player, "islandGen", 120);
                                     break;
                                 }
                             } else {
                                 player.closeInventory();
-                                player.sendMessage(main.getUtils().format("&4&l(!) Sorry, too many islands are being created at the moment! Try again in a moment!"));
-                                main.getSoundsManager().error(player);
+                                player.sendMessage(skooBlock.getUtils().format("&4&l(!) Sorry, too many islands are being created at the moment! Try again in a moment!"));
+                                skooBlock.getSoundsManager().error(player);
                             }
                         }
                     }
@@ -111,24 +110,24 @@ public class InventoryClickListener implements Listener {
                 ItemStack item = e.getCurrentItem();
 
                 if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-                    if (main.getIslandManager().playerHasIsland(player)) {
-                        for (IslandBiome islandBiome : main.getIslandBiomes()) {
+                    if (skooBlock.getIslandManager().playerHasIsland(player.getUniqueId().toString())) {
+                        for (IslandBiome islandBiome : skooBlock.getIslandBiomes()) {
                             if (utils.format(islandBiome.getFriendlyName()).equals(item.getItemMeta().getDisplayName())) {
-                                UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
-                                if (!main.getBiomeManager().getIslandBiome(userIsland).getFriendlyName().equals(item.getItemMeta().getDisplayName())) {
-                                    main.getSoundsManager().success(player);
+                                UserIsland userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
+                                if (!skooBlock.getBiomeManager().getIslandBiome(userIsland).getFriendlyName().equals(item.getItemMeta().getDisplayName())) {
+                                    skooBlock.getSoundsManager().success(player);
                                     player.closeInventory();
                                     player.sendMessage(utils.format("&6&l(!) &eUpdating island biome..."));
-                                    main.getBiomeManager().setIslandBiome(userIsland, islandBiome);
+                                    skooBlock.getBiomeManager().setIslandBiome(userIsland, islandBiome);
                                     player.sendMessage(utils.format("&2&l(!) &aIsland biome changed to " + islandBiome.getFriendlyName()));
                                 } else {
-                                    main.getSoundsManager().error(player);
+                                    skooBlock.getSoundsManager().error(player);
                                 }
                             }
                         }
                     } else {
                         player.closeInventory();
-                        main.getSoundsManager().error(player);
+                        skooBlock.getSoundsManager().error(player);
                         player.sendMessage(utils.format("&4&l(!) &cYou do not have an island! Use &7/is create &cto create one!"));
                     }
                 }
@@ -147,31 +146,31 @@ public class InventoryClickListener implements Listener {
                     if (itemName.equals(utils.format("&6&lCreate Warp"))) {
                         Bukkit.dispatchCommand(player, "is setwarp");
                         player.closeInventory();
-                        main.getSoundsManager().click(player);
+                        skooBlock.getSoundsManager().click(player);
                         return;
                     } else if (itemName.equals(utils.format("&b&lPrevious Page"))) {
                         if (page > 0) {
-                            main.getWarpMenu().open(player, page - 1);
+                            skooBlock.getWarpMenu().open(player, page - 1);
                         }
-                        main.getSoundsManager().click(player);
+                        skooBlock.getSoundsManager().click(player);
                         return;
                     } else if (itemName.equals(utils.format("&e&lRefresh"))) {
-                        main.getWarpMenu().open(player, 0);
-                        main.getSoundsManager().click(player);
+                        skooBlock.getWarpMenu().open(player, 0);
+                        skooBlock.getSoundsManager().click(player);
                         return;
                     } else if (itemName.equals(utils.format("&b&lNext Page"))) {
                         if (e.getInventory().getItem(44) != null) {
-                            main.getWarpMenu().open(player, page + 1);
+                            skooBlock.getWarpMenu().open(player, page + 1);
                         }
-                        main.getSoundsManager().click(player);
+                        skooBlock.getSoundsManager().click(player);
                         return;
                     }
 
-                    for (IslandWarp islandWarp : main.getWarpsManager().getAllWarps()) {
+                    for (IslandWarp islandWarp : skooBlock.getWarpsManager().getAllWarps()) {
                         String name = Bukkit.getOfflinePlayer(UUID.fromString(islandWarp.getOwnerUuid())).getName();
                         if (itemName.contains(utils.format(name))) {
                             player.teleport(islandWarp.getLocation());
-                            main.getSoundsManager().success(player);
+                            skooBlock.getSoundsManager().success(player);
                             player.sendMessage(utils.format("&2&l(!) &aTeleported to &e" + name + "&a's island!"));
                             return;
                         }

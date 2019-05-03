@@ -1,8 +1,7 @@
 package games.indigo.skooblock.listeners;
 
-import games.indigo.skooblock.Main;
+import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.UserIsland;
-import games.indigo.skooblock.utils.WorldBorderManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -16,30 +15,30 @@ import java.util.UUID;
 
 public class PlayerJoinListener implements Listener {
 
-    private Main main = Main.getInstance();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        if (main.getIslandManager().playerHasIsland(player)) {
-            if (main.getIslandManager().isPlayerOnHomeIsland(player)) {
-                UserIsland userIsland = main.getIslandManager().getPlayerIsland(player);
-                Location centre = Main.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
+        if (skooBlock.getIslandManager().playerHasIsland(player.getUniqueId().toString())) {
+            if (skooBlock.getIslandManager().isPlayerOnHomeIsland(player)) {
+                UserIsland userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
+                Location centre = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getCentre());
 
-                Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
+                Bukkit.getScheduler().runTaskLater(SkooBlock.getInstance(), new Runnable() {
                     @Override
                     public void run() {
-                        main.getWorldBorderManager().applyBorder(player);
+                        skooBlock.getWorldBorderManager().applyBorder(player);
                     }
                 }, 1);
 
-                Bukkit.getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
+                Bukkit.getScheduler().scheduleSyncRepeatingTask(skooBlock, new Runnable() {
                     @Override
                     public void run() {
                         String name  = Bukkit.getOfflinePlayer(UUID.fromString(userIsland.getOwner())).getName();
                         int level = 0;
                         String action = "&b&lIsland: &e" + name + " &8| &b&lLevel: &e" + level;
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(main.getUtils().format(action)));
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(skooBlock.getUtils().format(action)));
                     }
                 }, 0, 1);
             }
