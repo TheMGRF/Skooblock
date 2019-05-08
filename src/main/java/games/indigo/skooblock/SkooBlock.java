@@ -1,14 +1,11 @@
 package games.indigo.skooblock;
 
+import games.indigo.skooblock.island.*;
 import games.indigo.skooblock.island.biomes.BiomeManager;
 import games.indigo.skooblock.island.biomes.IslandBiome;
 import games.indigo.skooblock.commands.IslandCmd;
 import games.indigo.skooblock.commands.SkooblockCmd;
 import games.indigo.skooblock.guis.*;
-import games.indigo.skooblock.island.Island;
-import games.indigo.skooblock.island.IslandGenerator;
-import games.indigo.skooblock.island.IslandManager;
-import games.indigo.skooblock.island.IslandType;
 import games.indigo.skooblock.island.roles.IslandMemberRoleManager;
 import games.indigo.skooblock.island.warps.WarpsManager;
 import games.indigo.skooblock.listeners.*;
@@ -49,6 +46,8 @@ public class SkooBlock extends JavaPlugin {
     private WorldBorderManager worldBorderManager;
     private IslandMemberRoleManager islandMemberRoleManager;
 
+    private BlockLevelIndex blockLevelIndex;
+
     private List<Island> islands = new ArrayList<>();
     private List<IslandBiome> biomes = new ArrayList<>();
 
@@ -78,6 +77,8 @@ public class SkooBlock extends JavaPlugin {
         worldBorderManager = new WorldBorderManager();
         islandMemberRoleManager = new IslandMemberRoleManager();
 
+        loadBlockIndex();
+
         // Commands
         getCommand("island").setExecutor(new IslandCmd());
         getCommand("skooblock").setExecutor(new SkooblockCmd());
@@ -94,6 +95,17 @@ public class SkooBlock extends JavaPlugin {
         getConfigManager().reloadConfigs();
         loadIslands();
         loadBiomes();
+        loadBlockIndex();
+    }
+
+    private void loadBlockIndex() {
+        HashMap<Material, Integer> blockIndex = new HashMap<>();
+        for (String material : getConfigManager().getBlockIndexConfig().getConfigurationSection("materials").getKeys(false)) {
+            if (Material.valueOf(material) != null) {
+                blockIndex.put(Material.valueOf(material), getConfigManager().getBlockIndexConfig().getInt("materials." + material));
+            }
+        }
+        blockLevelIndex = new BlockLevelIndex(blockIndex);
     }
 
     private void loadIslands() {
@@ -148,6 +160,8 @@ public class SkooBlock extends JavaPlugin {
     public WarpsManager getWarpsManager() { return warpsManager; }
     public WorldBorderManager getWorldBorderManager() { return worldBorderManager; }
     public IslandMemberRoleManager getIslandMemberRoleManager() { return islandMemberRoleManager; }
+
+    public BlockLevelIndex getBlockLevelIndex() { return blockLevelIndex; }
 
     /**
      * Get the server spawn location

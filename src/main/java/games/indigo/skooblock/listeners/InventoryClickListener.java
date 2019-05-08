@@ -3,11 +3,13 @@ package games.indigo.skooblock.listeners;
 import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.biomes.IslandBiome;
 import games.indigo.skooblock.island.UserIsland;
+import games.indigo.skooblock.island.members.IslandMember;
 import games.indigo.skooblock.island.warps.IslandWarp;
 import games.indigo.skooblock.utils.Utils;
 import games.indigo.skooblock.island.Island;
 import net.darkscorner.darkscooldown.Cooldown;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -172,6 +174,25 @@ public class InventoryClickListener implements Listener {
                             player.teleport(islandWarp.getLocation());
                             skooBlock.getSoundsManager().success(player);
                             player.sendMessage(utils.format("&2&l(!) &aTeleported to &e" + name + "&a's island!"));
+                            return;
+                        }
+                    }
+                }
+            }
+        } else if (e.getInventory().getName().equals(utils.format("&a&lIsland Members"))) {
+            e.setCancelled(true);
+
+            if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
+                Player player = (Player) e.getWhoClicked();
+                ItemStack item = e.getCurrentItem();
+
+                if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+                    String itemName = item.getItemMeta().getDisplayName();
+                    String memberName = ChatColor.stripColor(itemName);
+
+                    for (IslandMember islandMember : skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString()).getMembers()) {
+                        if (Bukkit.getOfflinePlayer(UUID.fromString(islandMember.getUuid())).equals(memberName)) {
+                            // TODO: Check clicks and if user has permission to promote, demote and kick.
                             return;
                         }
                     }

@@ -12,6 +12,7 @@ import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.members.IslandMember;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -27,6 +28,7 @@ public class IslandManager {
 
     /**
      * Check to see if a player has an island
+     *
      * @param uuid The UUID of the player to check
      * @return <code>true</code> if player has an island; <code>false</code> if the player does not have an island
      */
@@ -36,6 +38,7 @@ public class IslandManager {
 
     /**
      * Get a players island
+     *
      * @param uuid The UUID of the player whos island to get
      * @return A players island
      */
@@ -51,6 +54,7 @@ public class IslandManager {
 
     /**
      * Check to see if a player is on their island
+     *
      * @param player The player to check
      * @return <code>true</code> if the player is on their island; <code>false</code> if the player is not on their island
      */
@@ -71,6 +75,7 @@ public class IslandManager {
 
     /**
      * Get the island the player is on
+     *
      * @param player The player to check
      * @return The user island the player is on
      */
@@ -101,6 +106,7 @@ public class IslandManager {
 
     /**
      * Get a user island at a specific location
+     *
      * @param loc The location to check
      * @return The user island at the location
      */
@@ -133,6 +139,7 @@ public class IslandManager {
 
     /**
      * Get the island a player is a member of
+     *
      * @param uuid The UUID of the player to check
      * @return The user island the player is a member of
      */
@@ -150,7 +157,8 @@ public class IslandManager {
 
     /**
      * Check to see if a player is a member of a user island
-     * @param player The player to check
+     *
+     * @param player     The player to check
      * @param userIsland The user island to check
      * @return <code>true</code> if the player is an island member; <code>false</code> if the player is not an island member
      */
@@ -160,6 +168,7 @@ public class IslandManager {
 
     /**
      * Reset a players island
+     *
      * @param player The player whos island should be reset
      */
     public void resetIsland(Player player) {
@@ -172,7 +181,7 @@ public class IslandManager {
         BlockVector3 upperVec = BlockVector3.at(upperLoc.getX(), upperLoc.getY(), upperLoc.getZ());
 
         EditSession editSession = new EditSessionBuilder(world).fastmode(true).build();
-        Region region = new CuboidRegion(world, lowerVec , upperVec);
+        Region region = new CuboidRegion(world, lowerVec, upperVec);
 
         // TODO: Should really find a more efficient method of doing this
         editSession.setBlocks(region, BlockTypes.AIR.getDefaultState());
@@ -180,6 +189,7 @@ public class IslandManager {
 
     /**
      * Check if a players island is currently resetting
+     *
      * @param player
      * @return
      */
@@ -189,6 +199,7 @@ public class IslandManager {
 
     /**
      * Generate a user island from config data
+     *
      * @param fileConfiguration The configuration file to get the information from
      * @return The generated user island
      */
@@ -229,6 +240,7 @@ public class IslandManager {
 
     /**
      * Get a list of all user islands
+     *
      * @return A list of all user islands
      */
     public List<UserIsland> getAllPlayerIslands() {
@@ -246,6 +258,50 @@ public class IslandManager {
         }
 
         return userIslands;
+    }
+
+    // TODO: 1.276*500 = 638
+    // TODO: 638/500 = 1.276
+
+    public int calculateIslandLevel(UserIsland userIsland) {
+        return calculateIslandPoints(userIsland)/500;
+    }
+
+    public int calculateIslandPoints(UserIsland userIsland) {
+        Location l1 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
+        Location l2 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
+
+        int level = 0;
+        for (Block block : getBlocksOnIsland(l1, l2)) {
+            level += SkooBlock.getInstance().getBlockLevelIndex().getBlockWorth(block.getType());
+        }
+
+        return level;
+    }
+
+    public static List<Block> getBlocksOnIsland(Location loc1, Location loc2) {
+        List<Block> blocks = new ArrayList<Block>();
+
+        int topBlockX = (loc1.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
+        int bottomBlockX = (loc1.getBlockX() > loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
+
+        int topBlockY = (loc1.getBlockY() < loc2.getBlockY() ? loc2.getBlockY() : loc1.getBlockY());
+        int bottomBlockY = (loc1.getBlockY() > loc2.getBlockY() ? loc2.getBlockY() : loc1.getBlockY());
+
+        int topBlockZ = (loc1.getBlockZ() < loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
+        int bottomBlockZ = (loc1.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
+
+        for (int x = bottomBlockX; x <= topBlockX; x++) {
+            for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+                for (int y = bottomBlockY; y <= topBlockY; y++) {
+                    Block block = loc1.getWorld().getBlockAt(x, y, z);
+
+                    blocks.add(block);
+                }
+            }
+        }
+
+        return blocks;
     }
 
 }

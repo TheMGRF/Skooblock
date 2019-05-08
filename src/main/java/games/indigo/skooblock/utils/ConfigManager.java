@@ -16,8 +16,8 @@ public class ConfigManager {
 
     private SkooBlock skooBlock = SkooBlock.getInstance();
 
-    public File configFile, islandsFile, biomeFile;
-    public FileConfiguration config, islandsConfig, biomeConfig;
+    public File configFile, islandsFile, biomeFile, blockIndexFile;
+    public FileConfiguration config, islandsConfig, biomeConfig, blockIndexConfig;
 
     public void loadFiles() {
         // Custom Config
@@ -61,6 +61,20 @@ public class ConfigManager {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+
+        // Block Index Config
+        blockIndexFile = new File(skooBlock.getDataFolder(), "block-index.yml");
+        if (!blockIndexFile.exists()) {
+            blockIndexFile.getParentFile().mkdirs();
+            skooBlock.saveResource("block-index.yml", false);
+        }
+
+        blockIndexConfig = new YamlConfiguration();
+        try {
+            blockIndexConfig.load(blockIndexFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     public FileConfiguration getCustomConfig() { return config; }
@@ -72,6 +86,9 @@ public class ConfigManager {
     public File getBiomeFile() { return biomeFile; }
     public FileConfiguration getBiomeConfig() { return biomeConfig; }
 
+    public File getBlockIndexFile() { return blockIndexFile; }
+    public FileConfiguration getBlockIndexConfig() { return blockIndexConfig; }
+
     public void reloadConfigs() {
         try {
             getCustomConfig().load(getCustomConfigFile());
@@ -80,6 +97,8 @@ public class ConfigManager {
             getIslandsConfig().load(getIslandsFile());
 
             getBiomeConfig().load(getBiomeFile());
+
+            getBlockIndexConfig().load(getBlockIndexFile());
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }

@@ -70,7 +70,12 @@ public class IslandCmd implements CommandExecutor {
                         }
                     } else if (args[0].equalsIgnoreCase("level")) {
                         // TODO: level
-                        player.sendMessage("level");
+                        Bukkit.getScheduler().runTaskAsynchronously(SkooBlock.getInstance(), new Runnable() {
+                            @Override
+                            public void run() {
+                                player.sendMessage(skooBlock.getUtils().format(": " + skooBlock.getIslandManager().calculateIslandLevel(skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString()))));
+                            }
+                        });
                     } else if (args[0].equalsIgnoreCase("setwarp")) {
                         if (skooBlock.getIslandManager().isPlayerOnHomeIsland(player)) {
                             skooBlock.getWarpsManager().setWarp(player);
@@ -92,6 +97,12 @@ public class IslandCmd implements CommandExecutor {
                     } else if (args[0].equalsIgnoreCase("members")) {
                         // TODO: members
                         skooBlock.getIslandMembersMenu().open(player);
+                    } else if (args[0].equalsIgnoreCase("promote")) {
+                        // TODO: promote
+                        player.sendMessage("promote");
+                    } else if (args[0].equalsIgnoreCase("demote")) {
+                        // TODO: demote
+                        player.sendMessage("demote");
                     } else if (args[0].equalsIgnoreCase("invite")) {
                         // TODO: invite member
                         if (args.length >= 2) {

@@ -1,5 +1,7 @@
 package games.indigo.skooblock.utils;
 
+import com.earth2me.essentials.api.Economy;
+import com.earth2me.essentials.api.UserDoesNotExistException;
 import games.indigo.skooblock.SkooBlock;
 import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.*;
@@ -8,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -155,6 +158,23 @@ public class Utils {
             }
         }
         return result;
+    }
+
+    /**
+     * Get a players economy balance
+     * @param player The player who's balance should be fetched
+     * @return The players current economy balance
+     */
+    public BigDecimal getBalance(String player) {
+        BigDecimal money;
+        try {
+            money = Economy.getMoneyExact(player);
+        } catch (UserDoesNotExistException e) {
+            e.printStackTrace();
+            return BigDecimal.valueOf(-1);
+        }
+
+        return money;
     }
 
 }
