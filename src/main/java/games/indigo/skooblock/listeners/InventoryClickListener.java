@@ -42,7 +42,8 @@ public class InventoryClickListener implements Listener {
                     } else if (itemName.equals(utils.format("&2&lBiome"))) {
                         Bukkit.dispatchCommand(player, "is biome");
                     } else if (itemName.equals(utils.format("&6&lLevel"))) {
-                        Bukkit.dispatchCommand(player, "is level");
+                        //Bukkit.dispatchCommand(player, "is level");
+                        skooBlock.getIslandLevelMenu().open(player);
                     } else if (itemName.equals(utils.format("&9&lWarps"))) {
                         Bukkit.dispatchCommand(player, "is warps");
                     } else if (itemName.equals(utils.format("&b&lSomething"))) {
@@ -196,6 +197,17 @@ public class InventoryClickListener implements Listener {
                             return;
                         }
                     }
+                }
+            }
+        } else if (e.getInventory().getName().equals(utils.format("&6&lIsland Levels"))) {
+            e.setCancelled(true);
+
+            if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
+                Player player = (Player) e.getWhoClicked();
+                ItemStack item = e.getCurrentItem();
+
+                if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+
                 }
             }
         }

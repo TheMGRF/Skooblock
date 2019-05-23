@@ -3,7 +3,6 @@ package games.indigo.skooblock.utils;
 import com.earth2me.essentials.api.Economy;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import games.indigo.skooblock.SkooBlock;
-import github.scarsz.discordsrv.DiscordSRV;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -129,7 +128,8 @@ public class Utils {
      * @return <code>true</code> if the player has linked their account; <code>false</code> if the player has not linked their account
      */
     public boolean hasLinkedDiscord(Player player) {
-        return DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(player.getUniqueId()) != null;
+        //return DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(player.getUniqueId()) != null;
+        return false;
     }
 
     /**
@@ -177,4 +177,23 @@ public class Utils {
         return money;
     }
 
+    /**
+     * Convert material to readable name
+     * @param material The material to convert
+     * @return The human readable material name
+     */
+    public String convertItemMaterial(Material material) {
+
+        String convert = material.toString().toLowerCase().replaceAll("\\_", " ");
+        String newName = "";
+
+        boolean space = true;
+        for (int i = 0; i < convert.length(); i++) {
+            if (space) newName += Character.toUpperCase(convert.charAt(i));
+            else newName += convert.charAt(i);
+            space = convert.charAt(i) == ' ';
+        }
+
+        return newName;
+    }
 }

@@ -49,6 +49,13 @@ public class IslandManager {
             UserIsland userIsland = generateUserIslandFromConfig(config);
             return userIsland;
         }
+        for (UserIsland userIsland : getAllPlayerIslands()) {
+            for (IslandMember islandMember : userIsland.getMembers()) {
+                if (islandMember.getUuid().equals(uuid)) {
+                    return userIsland;
+                }
+            }
+        }
         return null;
     }
 
@@ -268,18 +275,18 @@ public class IslandManager {
     }
 
     public int calculateIslandPoints(UserIsland userIsland) {
-        Location l1 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
-        Location l2 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
-
         int level = 0;
-        for (Block block : getBlocksOnIsland(l1, l2)) {
+        for (Block block : getBlocksOnIsland(userIsland)) {
             level += SkooBlock.getInstance().getBlockLevelIndex().getBlockWorth(block.getType());
         }
 
         return level;
     }
 
-    public static List<Block> getBlocksOnIsland(Location loc1, Location loc2) {
+    public List<Block> getBlocksOnIsland(UserIsland userIsland) {
+        Location loc1 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
+        Location loc2 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
+
         List<Block> blocks = new ArrayList<Block>();
 
         int topBlockX = (loc1.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());

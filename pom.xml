@@ -70,14 +70,6 @@
             <version>7.0.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Discord SRV -->
-        <dependency>
-            <groupId>com.discordsrv</groupId>
-            <artifactId>discordsrv</artifactId>
-            <version>1.16.6</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Cooldown API -->
         <dependency>
             <groupId>..</groupId>

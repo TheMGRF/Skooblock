@@ -3,8 +3,6 @@ name: Skooblock
 description: A fully fledged, feature rich custom Skyblock experience!
 version: 0.0.1
 api-version: 1.13
-depend:
-- DiscordSRV
 authors:
 - TheMGRF
 

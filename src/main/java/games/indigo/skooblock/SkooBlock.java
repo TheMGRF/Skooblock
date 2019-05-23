@@ -34,6 +34,7 @@ public class SkooBlock extends JavaPlugin {
     private IslandTypeSelector islandTypeSelector;
     private WarpMenu warpMenu;
     private IslandMembersMenu islandMembersMenu;
+    private IslandLevelMenu islandLevelMenu;
 
     // Managers
     private Utils utils;
@@ -66,6 +67,7 @@ public class SkooBlock extends JavaPlugin {
         islandTypeSelector = new IslandTypeSelector();
         warpMenu = new WarpMenu();
         islandMembersMenu = new IslandMembersMenu();
+        islandLevelMenu = new IslandLevelMenu();
 
         // Managers
         utils = new Utils();
@@ -147,6 +149,7 @@ public class SkooBlock extends JavaPlugin {
     public IslandTypeSelector getIslandTypeSelector() { return islandTypeSelector; }
     public WarpMenu getWarpMenu() { return warpMenu; }
     public IslandMembersMenu getIslandMembersMenu() { return islandMembersMenu; }
+    public IslandLevelMenu getIslandLevelMenu() { return islandLevelMenu; }
 
     // Managers
     public Utils getUtils() { return utils; }

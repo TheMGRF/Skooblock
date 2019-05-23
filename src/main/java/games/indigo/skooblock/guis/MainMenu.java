@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class MainMenu {
 
-    SkooBlock skooBlock = SkooBlock.getInstance();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
 
     public void open(Player player) {
         Inventory inv = Bukkit.createInventory(null, 45, skooBlock.getUtils().format("&6&lIsland Menu"));
@@ -19,7 +19,7 @@ public class MainMenu {
 
         inv.setItem(11, skooBlock.getUtils().buildItem(Material.OAK_SAPLING, 1, "&2&lBiome", Arrays.asList("", "&e&l(!) &7Edit your island biome settings!")));
 
-        inv.setItem(15, skooBlock.getUtils().buildItem(Material.END_PORTAL_FRAME, 1, "&6&lLevel &c&l(Coming Soon)", Arrays.asList("", "&e&l(!) &7View your island level!")));
+        inv.setItem(15, skooBlock.getUtils().buildItem(Material.END_PORTAL_FRAME, 1, "&6&lLevel", Arrays.asList("", "&e&l(!) &7View your island level!")));
 
         inv.setItem(18, skooBlock.getUtils().buildItem(Material.SIGN, 1, "&9&lWarps", Arrays.asList("", "&e&l(!) &7Warp to other player's islands!")));
 
