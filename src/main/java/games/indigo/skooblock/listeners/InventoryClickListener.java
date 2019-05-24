@@ -20,12 +20,12 @@ import java.util.UUID;
 
 public class InventoryClickListener implements Listener {
 
-    SkooBlock skooBlock = SkooBlock.getInstance();
-    Utils utils = skooBlock.getUtils();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
+    private Utils utils = skooBlock.getUtils();
 
     @EventHandler
     public void onInvClick(InventoryClickEvent e) {
-        if (e.getInventory().getName().equals(utils.format("&6&lIsland Menu"))) {
+        if (e.getView().getTitle().equals(utils.format("&6&lIsland Menu"))) {
             e.setCancelled(true);
 
             if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
@@ -42,8 +42,14 @@ public class InventoryClickListener implements Listener {
                     } else if (itemName.equals(utils.format("&2&lBiome"))) {
                         Bukkit.dispatchCommand(player, "is biome");
                     } else if (itemName.equals(utils.format("&6&lLevel"))) {
-                        //Bukkit.dispatchCommand(player, "is level");
-                        skooBlock.getIslandLevelMenu().open(player);
+                        Cooldown cooldown = Cooldown.getCooldown(player, "island-level");
+                        if (player.hasPermission("indigo.command.islevel.bypass") || cooldown == null || cooldown.isExpired()) {
+                            skooBlock.getIslandLevelMenu().open(player, 0);
+                            new Cooldown(player, "island-level", 300);
+                        } else {
+                            skooBlock.getSoundsManager().error(player);
+                            player.sendMessage(utils.format("&4&l(!) &cIsland level is still on cooldown! &e" + cooldown.getFormattedTimeLeft() + " &cremaining!"));
+                        }
                     } else if (itemName.equals(utils.format("&9&lWarps"))) {
                         Bukkit.dispatchCommand(player, "is warps");
                     } else if (itemName.equals(utils.format("&b&lSomething"))) {
@@ -55,12 +61,12 @@ public class InventoryClickListener implements Listener {
                     } else if (itemName.equals(utils.format("&e&lChallenges"))) {
                         Bukkit.dispatchCommand(player, "is challenges");
                     } else if (itemName.equals(utils.format("&d&lTop Islands"))) {
-                        Bukkit.dispatchCommand(player, "is top");
+                        skooBlock.getIslandTopMenu().open(player);
                     }
                 }
             }
 
-        } else if (e.getInventory().getName().equals(utils.format("&a&lIsland Creator"))) {
+        } else if (e.getView().getTitle().equals(utils.format("&a&lIsland Creator"))) {
             e.setCancelled(true);
 
             if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
@@ -76,13 +82,21 @@ public class InventoryClickListener implements Listener {
                                     skooBlock.getSoundsManager().success(player);
                                     skooBlock.getIslandManager().resetIsland(player);
                                     player.sendMessage(utils.format("&6&l(!) &eResetting island..."));
+
+                                    Bukkit.getScheduler().runTaskLater(SkooBlock.getInstance(), new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            skooBlock.getIslandGenerator().generateNewIsland(player, island.getIslandType().getValue());
+                                        }
+                                    }, 20 * 3);
+
                                     Bukkit.getScheduler().runTaskLater(SkooBlock.getInstance(), new Runnable() {
                                         @Override
                                         public void run() {
                                             UserIsland userIsland = skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString());
                                             player.teleport(utils.getLocationAsBukkitLocation(userIsland.getCentre()));
 
-                                            skooBlock.getIslandGenerator().generateNewIsland(player, island.getIslandType().getValue());
+
                                             new Cooldown(player, "islandGen", 120);
 
                                             player.sendMessage(utils.format("&2&l(!) &aIsland reset!"));
@@ -105,7 +119,7 @@ public class InventoryClickListener implements Listener {
                     }
                 }
             }
-        } else if (e.getInventory().getName().equals(utils.format("&2&lBiome Selector"))) {
+        } else if (e.getView().getTitle().equals(utils.format("&2&lBiome Selector"))) {
             e.setCancelled(true);
 
             if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
@@ -135,7 +149,7 @@ public class InventoryClickListener implements Listener {
                     }
                 }
             }
-        } else if (e.getInventory().getName().contains(utils.format("&3&lWarp Menu"))) {
+        } else if (e.getView().getTitle().contains(utils.format("&3&lWarp Menu"))) {
             e.setCancelled(true);
 
             if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
@@ -154,8 +168,10 @@ public class InventoryClickListener implements Listener {
                     } else if (itemName.equals(utils.format("&b&lPrevious Page"))) {
                         if (page > 0) {
                             skooBlock.getWarpMenu().open(player, page - 1);
+                        } else {
+                            skooBlock.getSoundsManager().click(player);
+                            skooBlock.getSoundsManager().error(player);
                         }
-                        skooBlock.getSoundsManager().click(player);
                         return;
                     } else if (itemName.equals(utils.format("&e&lRefresh"))) {
                         skooBlock.getWarpMenu().open(player, 0);
@@ -164,8 +180,10 @@ public class InventoryClickListener implements Listener {
                     } else if (itemName.equals(utils.format("&b&lNext Page"))) {
                         if (e.getInventory().getItem(44) != null) {
                             skooBlock.getWarpMenu().open(player, page + 1);
+                        } else {
+                            skooBlock.getSoundsManager().click(player);
+                            skooBlock.getSoundsManager().error(player);
                         }
-                        skooBlock.getSoundsManager().click(player);
                         return;
                     }
 
@@ -180,7 +198,7 @@ public class InventoryClickListener implements Listener {
                     }
                 }
             }
-        } else if (e.getInventory().getName().equals(utils.format("&a&lIsland Members"))) {
+        } else if (e.getView().getTitle().equals(utils.format("&a&lIsland Members"))) {
             e.setCancelled(true);
 
             if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
@@ -199,7 +217,7 @@ public class InventoryClickListener implements Listener {
                     }
                 }
             }
-        } else if (e.getInventory().getName().equals(utils.format("&6&lIsland Levels"))) {
+        } else if (e.getView().getTitle().contains(utils.format("&6&lIsland Level"))) {
             e.setCancelled(true);
 
             if (e.getClickedInventory() != null && e.getCurrentItem() != null) {
@@ -207,7 +225,26 @@ public class InventoryClickListener implements Listener {
                 ItemStack item = e.getCurrentItem();
 
                 if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+                    String itemName = item.getItemMeta().getDisplayName();
+                    int page = player.getMetadata("islandLevelPage").get(0).asInt();
 
+                    if (itemName.equals(utils.format("&b&lPrevious Page"))) {
+                        if (page > 0) {
+                            skooBlock.getIslandLevelMenu().open(player, page + 1);
+                        } else {
+                            skooBlock.getSoundsManager().click(player);
+                            skooBlock.getSoundsManager().error(player);
+                        }
+                    } else if (itemName.equals(utils.format("&b&lNext Page"))) {
+                        if (e.getInventory().getItem(44) != null) {
+                            skooBlock.getIslandLevelMenu().open(player, page - 1);
+                        } else {
+                            skooBlock.getSoundsManager().click(player);
+                            skooBlock.getSoundsManager().error(player);
+                        }
+                    } else {
+                        skooBlock.getSoundsManager().click(player);
+                    }
                 }
             }
         }

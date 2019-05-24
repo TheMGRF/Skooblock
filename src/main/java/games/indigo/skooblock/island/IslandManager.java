@@ -12,6 +12,7 @@ import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.members.IslandMember;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,6 +22,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -187,11 +189,16 @@ public class IslandManager {
         BlockVector3 lowerVec = BlockVector3.at(lowerLoc.getX(), lowerLoc.getY(), lowerLoc.getZ());
         BlockVector3 upperVec = BlockVector3.at(upperLoc.getX(), upperLoc.getY(), upperLoc.getZ());
 
-        EditSession editSession = new EditSessionBuilder(world).fastmode(true).build();
-        Region region = new CuboidRegion(world, lowerVec, upperVec);
+        //EditSession editSession = new EditSessionBuilder(world).fastmode(true).build();
+        //Region region = new CuboidRegion(world, lowerVec, upperVec);
+
+        for (Block block : getBlocksOnIsland(userIsland)) {
+            block.setType(Material.AIR);
+        }
+
 
         // TODO: Should really find a more efficient method of doing this
-        editSession.setBlocks(region, BlockTypes.AIR.getDefaultState());
+        //editSession.setBlocks(region, BlockTypes.AIR.getDefaultState());
     }
 
     /**
@@ -303,12 +310,25 @@ public class IslandManager {
                 for (int y = bottomBlockY; y <= topBlockY; y++) {
                     Block block = loc1.getWorld().getBlockAt(x, y, z);
 
-                    blocks.add(block);
+                    if (block.getType() != Material.AIR) {
+                        blocks.add(block);
+                    }
                 }
             }
         }
 
         return blocks;
     }
+
+    public List<UserIsland> getTopIslands(int top) {
+        List<UserIsland> userIslands = getAllPlayerIslands();
+        Collections.sort(userIslands);
+        Collections.reverse(userIslands);
+
+        if (userIslands.size() < top) { top = userIslands.size(); }
+
+        return userIslands.subList(0, top);
+    }
+
 
 }

@@ -40,7 +40,7 @@ public class IslandMembersMenu {
             String name = Bukkit.getOfflinePlayer(UUID.fromString(islandMember.getUuid())).getName();
             String role = islandMember.getMemberRole().getName();
             String balance = NumberFormat.getInstance().format(skooBlock.getUtils().getBalance(name));
-            inv.setItem(loop, skooBlock.getUtils().buildItem(getHead(player.getUniqueId().toString()), "&a" + name, Arrays.asList(""," &7Role: &e" + role, " &7Balance: &e$" + balance,"", "&e&l(!) &fLeft-Click &7to &apromote&7!", "&e&l(!) &fRight-Click &7to &cdemote&7!", "&e&l(!) &fMiddle-Click &7to &4kick&7!")));
+            inv.setItem(loop, skooBlock.getUtils().buildItem(getHead(islandMember.getUuid()), "&a" + name, Arrays.asList(""," &7Role: &e" + role, " &7Balance: &e$" + balance,"", "&e&l(!) &fLeft-Click &7to &apromote&7!", "&e&l(!) &fRight-Click &7to &cdemote&7!", "&e&l(!) &fMiddle-Click &7to &4kick&7!")));
             loop++;
         }
 

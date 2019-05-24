@@ -12,8 +12,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class IslandCmd implements CommandExecutor {
 
-    SkooBlock skooBlock = SkooBlock.getInstance();
-    Utils utils = SkooBlock.getInstance().getUtils();
+    private SkooBlock skooBlock = SkooBlock.getInstance();
+    private Utils utils = SkooBlock.getInstance().getUtils();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -69,13 +69,14 @@ public class IslandCmd implements CommandExecutor {
                             player.sendMessage(utils.format("&4&l(!) &cYou do not have an island! Use &7/is create &cto create one!"));
                         }
                     } else if (args[0].equalsIgnoreCase("level")) {
-                        // TODO: level
-                        Bukkit.getScheduler().runTaskAsynchronously(SkooBlock.getInstance(), new Runnable() {
-                            @Override
-                            public void run() {
-                                player.sendMessage(skooBlock.getUtils().format(": " + skooBlock.getIslandManager().calculateIslandLevel(skooBlock.getIslandManager().getPlayerIsland(player.getUniqueId().toString()))));
-                            }
-                        });
+                        Cooldown cooldown = Cooldown.getCooldown(player, "island-level");
+                        if (player.hasPermission("indigo.command.islevel.bypass") || cooldown == null || cooldown.isExpired()) {
+                            skooBlock.getIslandLevelMenu().open(player, 0);
+                            new Cooldown(player, "island-level", 300);
+                        } else {
+                            skooBlock.getSoundsManager().error(player);
+                            player.sendMessage(utils.format("&4&l(!) &cIsland level is still on cooldown! &e" + cooldown.getFormattedTimeLeft() + " &cremaining!"));
+                        }
                     } else if (args[0].equalsIgnoreCase("setwarp")) {
                         if (skooBlock.getIslandManager().isPlayerOnHomeIsland(player)) {
                             skooBlock.getWarpsManager().setWarp(player);
@@ -123,8 +124,7 @@ public class IslandCmd implements CommandExecutor {
                         // TODO: challenges
                         player.sendMessage("challenges");
                     } else if (args[0].equalsIgnoreCase("top")) {
-                        // TODO: top
-                        player.sendMessage("top");
+                        skooBlock.getIslandTopMenu().open(player);
                     } else {
                         // TODO: Unknown argument
                         player.sendMessage(utils.format("&4&l(!) &cUnknown argument!"));

@@ -41,6 +41,7 @@ public class WarpMenu {
 
         setFooter(inv);
 
+        skooBlock.getSoundsManager().click(player);
         player.setMetadata("islandWarpsPage", new FixedMetadataValue(skooBlock, page));
         player.openInventory(inv);
     }
@@ -70,7 +71,7 @@ public class WarpMenu {
     }
 
     private void setFooter(Inventory inv) {
-        ItemStack create = skooBlock.getUtils().buildItem(Material.SIGN, 1, "&6&lCreate Warp", Arrays.asList("&7Click to update your warp location!"));
+        ItemStack create = skooBlock.getUtils().buildItem(Material.OAK_SIGN, 1, "&6&lCreate Warp", Arrays.asList("&7Click to update your warp location!"));
         ItemStack previous = skooBlock.getUtils().buildItem(Material.ARROW, 1, "&b&lPrevious Page", Arrays.asList("&7Click to go to the previous page!"));
         ItemStack refresh = skooBlock.getUtils().buildItem(Material.SUNFLOWER, 1, "&e&lRefresh", Arrays.asList("&7Click to refresh the warps list!"));
         ItemStack next = skooBlock.getUtils().buildItem(Material.ARROW, 1, "&b&lNext Page", Arrays.asList("&7Click to go to the next page!"));

@@ -102,6 +102,7 @@ public class IslandGenerator {
         userIsland.generateConfig(userIsland);
     }
 
+    // TODO: Get new schematic API from Dom hopefully
     private void loadSchematic(String name, Location loc) {
         File file = new File(skooBlock.getDataFolder() + "/schematics/", name + ".schem");
 

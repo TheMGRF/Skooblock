@@ -87,13 +87,24 @@ public class Utils {
     public ItemStack buildWarpHead(UUID uuid, List<String> description) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
 
-        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD, 1);
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(format("&a" + offlinePlayer.getName() + "'s Island"));
 
         itemMeta.setLore(description);
         item.setItemMeta(itemMeta);
 
+        SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
+        skullMeta.setOwningPlayer(offlinePlayer);
+        item.setItemMeta(skullMeta);
+
+        return item;
+    }
+
+    public ItemStack buildTopHead(UUID uuid) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
         skullMeta.setOwningPlayer(offlinePlayer);
         item.setItemMeta(skullMeta);

@@ -5,7 +5,6 @@ import games.indigo.skooblock.island.members.IslandMember;
 import games.indigo.skooblock.island.roles.IslandMemberDefaultRole;
 import games.indigo.skooblock.island.roles.IslandMemberRole;
 import games.indigo.skooblock.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +13,7 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.*;
 
-public class UserIsland {
+public class UserIsland implements Comparable<UserIsland> {
 
     private String owner, biome, centre, lowerBound, upperBound, home, warp, description;
     private List<String> members;
@@ -60,6 +59,11 @@ public class UserIsland {
         this.settings = settings;
         this.size = size;
         this.level = level;
+    }
+
+    @Override
+    public int compareTo(UserIsland userIsland) {
+        return getLevel().compareTo(userIsland.getLevel());
     }
 
     /**
@@ -167,7 +171,7 @@ public class UserIsland {
      * Get the current level of an island
      * @return The current level of an island
      */
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 

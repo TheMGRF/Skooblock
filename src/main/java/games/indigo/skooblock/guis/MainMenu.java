@@ -21,7 +21,7 @@ public class MainMenu {
 
         inv.setItem(15, skooBlock.getUtils().buildItem(Material.END_PORTAL_FRAME, 1, "&6&lLevel", Arrays.asList("", "&e&l(!) &7View your island level!")));
 
-        inv.setItem(18, skooBlock.getUtils().buildItem(Material.SIGN, 1, "&9&lWarps", Arrays.asList("", "&e&l(!) &7Warp to other player's islands!")));
+        inv.setItem(18, skooBlock.getUtils().buildItem(Material.OAK_SIGN, 1, "&9&lWarps", Arrays.asList("", "&e&l(!) &7Warp to other player's islands!")));
 
         inv.setItem(22, skooBlock.getUtils().buildItem(Material.NETHER_STAR, 1, "&b&lShop", Arrays.asList("", "&e&l(!) &7Click to buy extra island gear!")));
 
@@ -31,7 +31,7 @@ public class MainMenu {
 
         inv.setItem(33, skooBlock.getUtils().buildItem(Material.CHEST, 1, "&e&lChallenges &c&l(Coming Soon)", Arrays.asList("", "&e&l(!) &7Click to view your island challenges!")));
 
-        inv.setItem(40, skooBlock.getUtils().buildItem(Material.ANVIL, 1, "&d&lTop Islands &c&l(Coming Soon)", Arrays.asList("", "&e&l(!) &7Check out the top islands on the server!")));
+        inv.setItem(40, skooBlock.getUtils().buildItem(Material.ANVIL, 1, "&d&lTop Islands", Arrays.asList("", "&e&l(!) &7Check out the top islands on the server!")));
 
         skooBlock.getSoundsManager().click(player);
         player.openInventory(inv);
