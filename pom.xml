@@ -53,7 +53,7 @@
             <artifactId>.</artifactId>
             <version>.</version>
             <scope>system</scope>
-            <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/spigot-1.14.1.jar</systemPath>
+            <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/spigot-1.14.2.jar</systemPath>
         </dependency>
 
         <!-- FAWE API -->
