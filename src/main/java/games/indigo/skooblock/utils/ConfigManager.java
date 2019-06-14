@@ -156,7 +156,6 @@ public class ConfigManager {
     public File getUserFile(String uuid) { return new File(skooBlock.getDataFolder() + "/user-islands/", uuid + ".yml"); }
 
     public List<FileConfiguration> getAllUserConfigs() {
-
         skooBlock.getDataFolder().listFiles();
         List<FileConfiguration> configs = new ArrayList<>();
         for (File file : new File(skooBlock.getDataFolder() + "/user-islands").listFiles()) {

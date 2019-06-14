@@ -53,11 +53,11 @@ public class Utils {
     }
 
     /**
-     *
-     * @param item
-     * @param name
-     * @param description
-     * @return
+     * Build an item stack
+     * @param item The item stack to use as a base
+     * @param name The name of the item
+     * @param description The description of the item
+     * @return The finished item stack
      */
     public ItemStack buildItem(ItemStack item, String name, List<String> description) {
         ItemMeta itemMeta = item.getItemMeta();
@@ -70,10 +70,10 @@ public class Utils {
     }
 
     /**
-     *
-     * @param item
-     * @param name
-     * @return
+     * Build an item stack
+     * @param item The item stack to use as a base
+     * @param name The name of the item
+     * @return The finished item stack
      */
     public ItemStack buildItem(ItemStack item, String name) {
         ItemMeta itemMeta = item.getItemMeta();
@@ -84,6 +84,12 @@ public class Utils {
         return item;
     }
 
+    /**
+     * Build a player head for the warp GUI
+     * @param uuid The UUID for for the player to use
+     * @param description The island description for the player head
+     * @return The itemstack player head
+     */
     public ItemStack buildWarpHead(UUID uuid, List<String> description) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
 
@@ -101,6 +107,11 @@ public class Utils {
         return item;
     }
 
+    /**
+     * Create a top player item head
+     * @param uuid The UUID of the player to use
+     * @return The itemstack player head
+     */
     public ItemStack buildTopHead(UUID uuid) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
 
@@ -153,6 +164,12 @@ public class Utils {
         return new Location(Bukkit.getWorld(SkooBlock.getInstance().getConfigManager().getCustomConfig().getString("world")), Integer.parseInt(locs[0]), Integer.parseInt(locs[1]), Integer.parseInt(locs[2]));
     }
 
+    /**
+     * Get all the blocks within a region
+     * @param loc1 The lower boundary of a region
+     * @param loc2 The upper boundary of a region
+     * @return The list of blocks in a region
+     */
     public List<Location> getBlocksInRegion(Location loc1, Location loc2) {
         List<Location> result = new ArrayList<>();
         int minX = Math.min(loc1.getBlockX(), loc2.getBlockX());

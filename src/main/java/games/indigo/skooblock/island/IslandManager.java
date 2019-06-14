@@ -1,13 +1,8 @@
 package games.indigo.skooblock.island;
 
-import com.boydti.fawe.util.EditSessionBuilder;
-import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
-import com.sk89q.worldedit.world.block.BlockTypes;
 import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.members.IslandMember;
 import org.bukkit.Bukkit;
@@ -242,6 +237,11 @@ public class IslandManager {
                 fileConfiguration.getInt("level"));
     }
 
+    /**
+     * Get a user island from a UUID
+     * @param uuid The UUID to check
+     * @return The user island relating to the UUID
+     */
     public UserIsland getUserIslandFromUUID(String uuid) {
         for (UserIsland userIsland : getAllPlayerIslands()) {
             if (userIsland.getOwner().equals(uuid)) {
@@ -277,19 +277,34 @@ public class IslandManager {
     // TODO: 1.276*500 = 638
     // TODO: 638/500 = 1.276
 
+    /**
+     * Calculate the island level
+     * @param userIsland The island to calculate the level of
+     * @return The user islands level
+     */
     public int calculateIslandLevel(UserIsland userIsland) {
         return calculateIslandPoints(userIsland)/500;
     }
 
+    /**
+     * Calculate the points on a users island
+     * @param userIsland The user island to calculate the points of
+     * @return The user island points
+     */
     public int calculateIslandPoints(UserIsland userIsland) {
-        int level = 0;
+        int points = 0;
         for (Block block : getBlocksOnIsland(userIsland)) {
-            level += SkooBlock.getInstance().getBlockLevelIndex().getBlockWorth(block.getType());
+            points += SkooBlock.getInstance().getBlockLevelIndex().getBlockWorth(block.getType());
         }
 
-        return level;
+        return points;
     }
 
+    /**
+     * Get a list of blocks on a users island
+     * @param userIsland The user island to get the blocks on
+     * @return The list of blocks on a users island
+     */
     public List<Block> getBlocksOnIsland(UserIsland userIsland) {
         Location loc1 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
         Location loc2 = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
@@ -320,6 +335,11 @@ public class IslandManager {
         return blocks;
     }
 
+    /**
+     * Get a list of the top islands
+     * @param top The amount of top islands to get
+     * @return The list of top islands
+     */
     public List<UserIsland> getTopIslands(int top) {
         List<UserIsland> userIslands = getAllPlayerIslands();
         Collections.sort(userIslands);
