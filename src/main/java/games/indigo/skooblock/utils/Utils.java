@@ -1,8 +1,7 @@
 package games.indigo.skooblock.utils;
 
-import com.earth2me.essentials.api.Economy;
-import com.earth2me.essentials.api.UserDoesNotExistException;
 import games.indigo.skooblock.SkooBlock;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -189,20 +188,12 @@ public class Utils {
     }
 
     /**
-     * Get a players economy balance
-     * @param player The player who's balance should be fetched
-     * @return The players current economy balance
+     * Get a players current balance
+     * @param offlinePlayer The player's balance to fetch
+     * @return The players current balance
      */
-    public BigDecimal getBalance(String player) {
-        BigDecimal money;
-        try {
-            money = Economy.getMoneyExact(player);
-        } catch (UserDoesNotExistException e) {
-            e.printStackTrace();
-            return BigDecimal.valueOf(-1);
-        }
-
-        return money;
+    public double getBalance(OfflinePlayer offlinePlayer) {
+        return SkooBlock.getInstance().getEconomy().getBalance(offlinePlayer);
     }
 
     /**

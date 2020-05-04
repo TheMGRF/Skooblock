@@ -5,6 +5,7 @@ import games.indigo.skooblock.island.UserIsland;
 import games.indigo.skooblock.island.members.IslandMember;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -37,10 +38,10 @@ public class IslandMembersMenu {
 
         int loop = 0;
         for (IslandMember islandMember : userIsland.getMembers()) {
-            String name = Bukkit.getOfflinePlayer(UUID.fromString(islandMember.getUuid())).getName();
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(islandMember.getUuid()));
             String role = islandMember.getMemberRole().getName();
-            String balance = NumberFormat.getInstance().format(skooBlock.getUtils().getBalance(name));
-            inv.setItem(loop, skooBlock.getUtils().buildItem(getHead(islandMember.getUuid()), "&a" + name, Arrays.asList(""," &7Role: &e" + role, " &7Balance: &e$" + balance,"", "&e&l(!) &fLeft-Click &7to &apromote&7!", "&e&l(!) &fRight-Click &7to &cdemote&7!", "&e&l(!) &fMiddle-Click &7to &4kick&7!")));
+            String balance = NumberFormat.getInstance().format(skooBlock.getUtils().getBalance(offlinePlayer));
+            inv.setItem(loop, skooBlock.getUtils().buildItem(getHead(islandMember.getUuid()), "&a" + offlinePlayer.getName(), Arrays.asList(""," &7Role: &e" + role, " &7Balance: &e$" + balance,"", "&e&l(!) &fLeft-Click &7to &apromote&7!", "&e&l(!) &fRight-Click &7to &cdemote&7!", "&e&l(!) &fMiddle-Click &7to &4kick&7!")));
             loop++;
         }
 

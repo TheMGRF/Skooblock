@@ -13,12 +13,14 @@ import games.indigo.skooblock.utils.ConfigManager;
 import games.indigo.skooblock.utils.SoundsManager;
 import games.indigo.skooblock.utils.Utils;
 import games.indigo.skooblock.utils.WorldBorderManager;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -53,6 +55,8 @@ public class SkooBlock extends JavaPlugin {
     private List<Island> islands = new ArrayList<>();
     private List<IslandBiome> biomes = new ArrayList<>();
 
+    private Economy economy;
+
     public void onEnable() {
         instance = this;
         configManager = new ConfigManager();
@@ -60,6 +64,8 @@ public class SkooBlock extends JavaPlugin {
         configManager.loadFiles();
         loadIslands();
         loadBiomes();
+
+        setupEconomy();
 
         // Classes
         // GUIs
@@ -100,6 +106,17 @@ public class SkooBlock extends JavaPlugin {
         loadIslands();
         loadBiomes();
         loadBlockIndex();
+    }
+
+    private void setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return;
+        }
+        economy = rsp.getProvider();
     }
 
     private void loadBlockIndex() {
@@ -144,6 +161,10 @@ public class SkooBlock extends JavaPlugin {
 
     // Global Accessors
     public static SkooBlock getInstance() { return instance; }
+
+    public Economy getEconomy() {
+        return getEconomy();
+    }
 
     // GUIs
     public MainMenu getMainMenu() { return mainMenu; }

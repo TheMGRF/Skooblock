@@ -9,7 +9,13 @@
     <version>0.1.1</version>
 
     <repositories>
-        <!-- FAWE repository -->
+        <!-- Vault -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <!-- FAWE -->
         <repository>
             <id>fawe-repo</id>
             <url>https://ci.athion.net/job/FastAsyncWorldEdit-1.13/ws/mvn</url>
@@ -65,6 +71,13 @@
             <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/DarksCorner/DarksCooldownAPI.jar</systemPath>
         </dependency>
 
+        <!-- Vault API -->
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
