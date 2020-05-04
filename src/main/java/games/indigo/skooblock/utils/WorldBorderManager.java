@@ -2,12 +2,12 @@ package games.indigo.skooblock.utils;
 
 import games.indigo.skooblock.SkooBlock;
 import games.indigo.skooblock.island.UserIsland;
-import net.minecraft.server.v1_14_R1.EntityPlayer;
-import net.minecraft.server.v1_14_R1.PacketPlayOutWorldBorder;
-import net.minecraft.server.v1_14_R1.WorldBorder;
-import net.minecraft.server.v1_14_R1.WorldServer;
+import net.minecraft.server.v1_15_R1.EntityPlayer;
+import net.minecraft.server.v1_15_R1.PacketPlayOutWorldBorder;
+import net.minecraft.server.v1_15_R1.WorldBorder;
+import net.minecraft.server.v1_15_R1.WorldServer;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class WorldBorderManager {

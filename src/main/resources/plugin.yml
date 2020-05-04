@@ -1,7 +1,7 @@
 main: games.indigo.skooblock.SkooBlock
 name: Skooblock
 description: A fully fledged, feature rich custom Skyblock experience!
-version: 0.0.1
+version: ${project.version}
 api-version: 1.14
 authors:
 - TheMGRF

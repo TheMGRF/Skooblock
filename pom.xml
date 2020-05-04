@@ -6,15 +6,9 @@
 
     <groupId>games.indigo</groupId>
     <artifactId>SkooBlock</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.1</version>
 
     <repositories>
-        <!-- Paper -->
-        <repository>
-            <id>papermc</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
-
         <!-- FAWE repository -->
         <repository>
             <id>fawe-repo</id>
@@ -26,10 +20,10 @@
             <id>sk89q-snapshots</id>
             <url>http://maven.sk89q.com/artifactory/repo</url>
             <releases>
-                <enabled>true</enabled> <!-- releases enabled: this specific repository also hosts release versions -->
+                <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>true</enabled> <!-- snapshots enabled: we declare a SNAPSHOT repository because we need to download a SNAPSHOT dependency -->
+                <enabled>true</enabled>
             </snapshots>
         </repository>
 
@@ -38,22 +32,14 @@
             <url>https://nexus.scarsz.me/content/groups/public/</url>
         </repository>
     </repositories>
+
     <dependencies>
-        <!-- Paper API-->
+        <!-- Paper -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.14.1-R0.1-SNAPSHOT</version>
+            <artifactId>paper</artifactId>
+            <version>1.15.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- NMS-->
-        <dependency>
-            <groupId>.</groupId>
-            <artifactId>.</artifactId>
-            <version>.</version>
-            <scope>system</scope>
-            <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/spigot-1.14.2.jar</systemPath>
         </dependency>
 
         <!-- FAWE API -->
@@ -79,17 +65,16 @@
             <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/DarksCorner/DarksCooldownAPI.jar</systemPath>
         </dependency>
 
-        <!-- Essentials -->
-        <dependency>
-            <groupId>...</groupId>
-            <artifactId>...</artifactId>
-            <version>...</version>
-            <scope>system</scope>
-            <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/Essentials.jar</systemPath>
-        </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
