@@ -1,14 +1,13 @@
 package games.indigo.skooblock.commands;
 
 import games.indigo.skooblock.SkooBlock;
+import games.indigo.skooblock.utils.Text;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SkooblockCmd implements CommandExecutor {
-
-    SkooBlock skooBlock = SkooBlock.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -21,12 +20,12 @@ public class SkooblockCmd implements CommandExecutor {
                     if (args[0].equalsIgnoreCase("help")) {
                         player.sendMessage("admin help menu");
                     } else if (args[0].equalsIgnoreCase("reload")) {
-                        skooBlock.reload();
-                        player.sendMessage(skooBlock.getUtils().format("&2&l(!) &aReloaded all configuration files!"));
+                        SkooBlock.getInstance().reload();
+                        player.sendMessage(Text.colour("&2&l(!) &aReloaded all configuration files!"));
                     }
                 }
             } else {
-                player.sendMessage(skooBlock.getUtils().format("&cYou do not have access to this command!"));
+                player.sendMessage(Text.colour("&cYou do not have access to this command!"));
             }
         }
         return true;
