@@ -43,8 +43,7 @@ public class IslandManager {
         if (playerHasIsland(uuid)) {
             FileConfiguration config = SkooBlock.getInstance().getConfigManager().getUserConfig(uuid);
 
-            UserIsland userIsland = generateUserIslandFromConfig(config);
-            return userIsland;
+            return generateUserIslandFromConfig(config);
         }
         for (UserIsland userIsland : getAllPlayerIslands()) {
             for (IslandMember islandMember : userIsland.getMembers()) {
@@ -70,9 +69,7 @@ public class IslandManager {
             Location lowerBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getLowerBound());
             Location upperBound = SkooBlock.getInstance().getUtils().getLocationAsBukkitLocation(userIsland.getUpperBound());
 
-            if (((loc.getX() > lowerBound.getX()) && (loc.getY() > lowerBound.getY()) && (loc.getZ() > lowerBound.getZ())) && ((loc.getX() < upperBound.getX()) && (loc.getY() < upperBound.getY()) && (loc.getZ() < upperBound.getZ()))) {
-                return true;
-            }
+            return ((loc.getX() > lowerBound.getX()) && (loc.getY() > lowerBound.getY()) && (loc.getZ() > lowerBound.getZ())) && ((loc.getX() < upperBound.getX()) && (loc.getY() < upperBound.getY()) && (loc.getZ() < upperBound.getZ()));
         }
         return false;
     }
@@ -162,7 +159,7 @@ public class IslandManager {
     /**
      * Check to see if a player is a member of a user island
      *
-     * @param player     The player to check
+     * @param player The player to check
      * @param userIsland The user island to check
      * @return <code>true</code> if the player is an island member; <code>false</code> if the player is not an island member
      */
@@ -191,7 +188,6 @@ public class IslandManager {
             block.setType(Material.AIR);
         }
 
-
         // TODO: Should really find a more efficient method of doing this
         //editSession.setBlocks(region, BlockTypes.AIR.getDefaultState());
     }
@@ -199,8 +195,8 @@ public class IslandManager {
     /**
      * Check if a players island is currently resetting
      *
-     * @param player
-     * @return
+     * @param player The player whos island might be resetting
+     * @return <code>true</code> if player island is resetting; <code>false</code> if otherwise
      */
     public boolean isIslandResetting(Player player) {
         return player.hasMetadata("resettingIsland");
@@ -218,9 +214,7 @@ public class IslandManager {
             // TODO: Bug here NPE
 
             Map<String, Object> map = fileConfiguration.getConfigurationSection("members.").getValues(false);
-            for (String uuid : map.keySet()) {
-                members.add(uuid);
-            }
+            members.addAll(map.keySet());
         }
 
         return new UserIsland(fileConfiguration.getString("owner"),
@@ -239,6 +233,7 @@ public class IslandManager {
 
     /**
      * Get a user island from a UUID
+     *
      * @param uuid The UUID to check
      * @return The user island relating to the UUID
      */
@@ -279,15 +274,17 @@ public class IslandManager {
 
     /**
      * Calculate the island level
+     *
      * @param userIsland The island to calculate the level of
      * @return The user islands level
      */
     public int calculateIslandLevel(UserIsland userIsland) {
-        return calculateIslandPoints(userIsland)/500;
+        return calculateIslandPoints(userIsland) / 500;
     }
 
     /**
      * Calculate the points on a users island
+     *
      * @param userIsland The user island to calculate the points of
      * @return The user island points
      */
@@ -302,6 +299,7 @@ public class IslandManager {
 
     /**
      * Get a list of blocks on a users island
+     *
      * @param userIsland The user island to get the blocks on
      * @return The list of blocks on a users island
      */
@@ -311,14 +309,15 @@ public class IslandManager {
 
         List<Block> blocks = new ArrayList<Block>();
 
-        int topBlockX = (loc1.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
-        int bottomBlockX = (loc1.getBlockX() > loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
+        //int topBlockX = (loc1.getBlockX() < loc2.getBlockX() ? loc2.getBlockX() : loc1.getBlockX());
+        int topBlockX = Math.max(loc1.getBlockX(), loc2.getBlockX());
+        int bottomBlockX = Math.min(loc1.getBlockX(), loc2.getBlockX());
 
-        int topBlockY = (loc1.getBlockY() < loc2.getBlockY() ? loc2.getBlockY() : loc1.getBlockY());
-        int bottomBlockY = (loc1.getBlockY() > loc2.getBlockY() ? loc2.getBlockY() : loc1.getBlockY());
+        int topBlockY = Math.max(loc1.getBlockY(), loc2.getBlockY());
+        int bottomBlockY = Math.min(loc1.getBlockY(), loc2.getBlockY());
 
-        int topBlockZ = (loc1.getBlockZ() < loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
-        int bottomBlockZ = (loc1.getBlockZ() > loc2.getBlockZ() ? loc2.getBlockZ() : loc1.getBlockZ());
+        int topBlockZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+        int bottomBlockZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
 
         for (int x = bottomBlockX; x <= topBlockX; x++) {
             for (int z = bottomBlockZ; z <= topBlockZ; z++) {
@@ -337,6 +336,7 @@ public class IslandManager {
 
     /**
      * Get a list of the top islands
+     *
      * @param top The amount of top islands to get
      * @return The list of top islands
      */
@@ -345,7 +345,9 @@ public class IslandManager {
         Collections.sort(userIslands);
         Collections.reverse(userIslands);
 
-        if (userIslands.size() < top) { top = userIslands.size(); }
+        if (userIslands.size() < top) {
+            top = userIslands.size();
+        }
 
         return userIslands.subList(0, top);
     }

@@ -5,15 +5,15 @@ import org.bukkit.entity.Player;
 
 public class SoundsManager {
 
-    public void success(Player player) {
+    public static void success(Player player) {
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
     }
 
-    public void error(Player player) {
+    public static void error(Player player) {
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1, 1);
     }
 
-    public void click(Player player) {
+    public static void click(Player player) {
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
     }
 
