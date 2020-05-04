@@ -4,38 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>games.indigo</groupId>
+    <groupId>me.themgrf</groupId>
     <artifactId>SkooBlock</artifactId>
-    <version>0.1.1</version>
+    <version>1.0.0</version>
 
     <repositories>
         <!-- Vault -->
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
-        </repository>
-
-        <!-- FAWE -->
-        <repository>
-            <id>fawe-repo</id>
-            <url>https://ci.athion.net/job/FastAsyncWorldEdit-1.13/ws/mvn</url>
-        </repository>
-
-        <!-- World Edit -->
-        <repository>
-            <id>sk89q-snapshots</id>
-            <url>http://maven.sk89q.com/artifactory/repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>Scarsz-Nexus</id>
-            <url>https://nexus.scarsz.me/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -48,18 +25,19 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- FAWE API -->
-        <dependency>
-            <groupId>com.boydti</groupId>
-            <artifactId>fawe-api</artifactId>
-            <version>latest</version>
-        </dependency>
-
         <!-- World Edit -->
+<!--        <dependency>-->
+<!--            <groupId>com.sk89q.worldedit</groupId>-->
+<!--            <artifactId>worldedit-bukkit</artifactId>-->
+<!--            <version>7.0.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+        <!-- Have to do a local repo because site is blocked for some reason -->
         <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
+            <groupId>.</groupId>
+            <artifactId>.</artifactId>
+            <version>.</version>
+            <scope>system</scope>
+            <systemPath>C:/Users/Thomas/Documents/IntelliJ Coding/worldedit-bukkit-7.1.0.jar</systemPath>
         </dependency>
 
         <!-- Cooldown API -->

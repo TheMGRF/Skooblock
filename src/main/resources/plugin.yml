@@ -1,10 +1,12 @@
-main: games.indigo.skooblock.SkooBlock
+main: me.themgrf.skooblock.SkooBlock
 name: Skooblock
 description: A fully fledged, feature rich custom Skyblock experience!
 version: ${project.version}
 api-version: 1.14
 authors:
 - TheMGRF
+depend:
+  - Vault
 
 commands:
   island:
